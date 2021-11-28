@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Classe responsável pela análise léxica do compilador
@@ -15,6 +13,8 @@ public class Lexical {
 	private List<String> mathOperators = new ArrayList<String>();
 	private List<String> attOperators  = new ArrayList<String>();
 	private List<String> logOperators  = new ArrayList<String>();
+	private List<String> punOperators  = new ArrayList<String>();
+	private List<Token>  tokens 	   = new ArrayList<Token>();
 	private int position  		   	   = 0;
 	private int line 	 	 	       = 1;
 	private int sQuotes 		       = 0;
@@ -31,9 +31,8 @@ public class Lexical {
 	}
 
 	public List<Token> analisys() {
-		List<Token> tokens = new ArrayList<Token>();
 		do {
-			tokens.add(newToken());
+			newToken();
 		} while (!isProgramEnd()); //Equanto ainda houver caracteres para serem lidos
 		return tokens;
 	}
@@ -76,9 +75,9 @@ public class Lexical {
 						content += code[position];
 						nextChar();
 					}
-					else if (isCarriageReturn()) {
+					else if (isCarriageReturn() || isPunctuation()) {
 						state = State.TOKEN_END;
-;						break;
+						break;
 					}
 					else {
 						Exceptions.lexicalInvalidSymbol(code[position], line);
@@ -96,9 +95,9 @@ public class Lexical {
 						content += code[position];
 						nextChar();
  					}
-					else if (isCarriageReturn()) {
+					else if (isCarriageReturn() || isPunctuation()) {
 						state = State.TOKEN_END;
-;						break;
+						break;
 					}
 					else {
 						Exceptions.lexicalInvalidSymbol(code[position], line);
@@ -111,15 +110,19 @@ public class Lexical {
 						state = State.INITIAL;
 						break;
 					}
-					return new Token(content, tokenType);
+					addToken(content, tokenType);
 					
 				case State.PROGRAM_END:
 					verifyToken(content);
-					return new Token(content, tokenType);
+					addToken(content, tokenType);
 			}
 		}
 	}
 	
+	public void addToken(String content, int tokenType) {
+		tokens.add(new Token(content, tokenType));
+	}
+	 
 	public void takeState() {
 		if (isQuote()) {
 			state     = State.LITERAL;
@@ -130,6 +133,10 @@ public class Lexical {
 		else if (isOperator()) {
 			state 	  = State.OPERATOR;
 			tokenType = TokenType.OPERATOR;
+		}
+		else if (isPunctuation()) {
+			state 	  = State.TOKEN_END;
+			tokenType = TokenType.PUNCTUATION;
 		}
 		else if (isWord()) {
 			state     = State.WORD;
@@ -143,7 +150,7 @@ public class Lexical {
 			line++;
 			nextChar();
 		}
-		else if (isCarriageReturn() || isTab()) {
+		else if (isTabChar()) {
 			nextChar();
 		}
 		else {
@@ -208,6 +215,9 @@ public class Lexical {
 		else if (logOperators.contains(content)) {
 			tokenType = TokenType.LOG_OPERATOR;
 		}
+		else if (punOperators.contains(content)) {
+			tokenType = TokenType.PUNCTUATION;
+		}
 		else {
 			Exceptions.lexicalInvalidOperator(content, line);
 		}
@@ -246,6 +256,10 @@ public class Lexical {
 		return code[position] == '\'' || code[position] == '\"';
 	}
 	
+	public boolean isTabChar() {
+		return isCarriageReturn() || isTab();
+	}
+	
 	public boolean isLineBreak() {
 		return code[position] == '\n';
 	}
@@ -271,18 +285,15 @@ public class Lexical {
 	}
 	
 	public boolean isOperator() {
-		return code[position] == '=' || code[position] == '>' || code[position] == '<' || code[position] == '+' || code[position] == '-'
-			|| code[position] == '*' || code[position] == '/' || code[position] == '%';
+		return code[position] == '<' || code[position] == '>' || code[position] == '=' || code[position] == '!' ||
+			   code[position] == '+' || code[position] == '-' || code[position] == '*' || code[position] == '/';
 	}
 	
-	public boolean isOpenKey() {
-		return code[position] == '{';
+	public boolean isPunctuation() {
+		return code[position] == '(' || code[position] == ')' ||
+			   code[position] == '{' || code[position] == '}' || code[position] == ';';
 	}
-	
-	public boolean isCloseKey() {
-		return code[position] == '}';
-	}
-	
+
 	public void nextChar() {
 		position++;
 	}
@@ -332,6 +343,16 @@ public class Lexical {
 		this.logOperators.add(">");
 		this.logOperators.add("<");
 	}
+
+	public void setPunOperators() {
+		this.punOperators.add("{");
+		this.punOperators.add("}");
+		this.punOperators.add("(");
+		this.punOperators.add(")");
+		this.punOperators.add(";");
+	}
+	
+	
 	
 	
 	

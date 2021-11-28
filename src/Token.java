@@ -27,7 +27,7 @@ public class Token {
 
 	@Override
 	public String toString() {
-		return "Token [content= " + content + ", type= " + type + "]";
+		return "Token [content: " + content + ", type: " + type + "]";
 	}
 	
 	

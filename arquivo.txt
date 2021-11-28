@@ -1,7 +1,8 @@
-var soma = 1 + 1
-
-var sub = 1 - 1
-
-var total = sub + soma
-
-total = 0
+program
+	begin
+		var soma = 1 + 1;
+		soma = soma + 1
+		if (soma > 1) {
+			soma = 3
+		}
+	end
