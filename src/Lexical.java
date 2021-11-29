@@ -15,6 +15,7 @@ public class Lexical {
 	private List<String> logOperators  = new ArrayList<String>();
 	private List<String> punOperators  = new ArrayList<String>();
 	private List<Token>  tokens 	   = new ArrayList<Token>();
+	
 	private int position  		   	   = 0;
 	private int line 	 	 	       = 1;
 	private int sQuotes 		       = 0;
@@ -32,7 +33,7 @@ public class Lexical {
 
 	public List<Token> analisys() {
 		do {
-			newToken();
+			tokens.add(newToken());
 		} while (!isProgramEnd()); //Equanto ainda houver caracteres para serem lidos
 		return tokens;
 	}
@@ -71,11 +72,14 @@ public class Lexical {
 					break;
 					
 				case State.WORD:
-					if (isWord() || isNumber() || isUnderline()) {
+					if (isWordChar() || isNumberChar() || isUnderlineChar()) {
 						content += code[position];
 						nextChar();
 					}
-					else if (isCarriageReturn() || isPunctuation()) {
+					else if (isCarriageReturn() || isOperatorChar() || isPunctuationChar()) {
+						if (isOperatorChar() || isPunctuationChar()) {
+							return new Token(content, tokenType);
+						}
 						state = State.TOKEN_END;
 						break;
 					}
@@ -85,7 +89,7 @@ public class Lexical {
 					break;
 					
 				case State.NUMBER:
-					if (isNumber() || isPoint()) {
+					if (isNumberChar() || isPoint()) {
 						if (isPoint()) {
 							if (tokenType == TokenType.REAL) {
 								Exceptions.lexicalRealPoints(line);
@@ -95,7 +99,10 @@ public class Lexical {
 						content += code[position];
 						nextChar();
  					}
-					else if (isCarriageReturn() || isPunctuation()) {
+					else if (isCarriageReturn() || isPunctuationChar()) {
+						if (isOperatorChar() || isPunctuationChar()) {
+							return new Token(content, tokenType);
+						}
 						state = State.TOKEN_END;
 						break;
 					}
@@ -104,23 +111,24 @@ public class Lexical {
 					}
 					break;
 					
+				case State.PUNCTUATION:
+						content += code[position];
+						state = State.TOKEN_END;
+						break;
+					
 				case State.TOKEN_END:
 					nextChar();
 					if (!verifyToken(content)) {
 						state = State.INITIAL;
 						break;
 					}
-					addToken(content, tokenType);
+					return new Token(content, tokenType);
 					
 				case State.PROGRAM_END:
 					verifyToken(content);
-					addToken(content, tokenType);
+					return new Token(content, tokenType);
 			}
 		}
-	}
-	
-	public void addToken(String content, int tokenType) {
-		tokens.add(new Token(content, tokenType));
 	}
 	 
 	public void takeState() {
@@ -130,21 +138,25 @@ public class Lexical {
 			plusQuotes();
 			nextChar();
 		} 
-		else if (isOperator()) {
+		else if (isOperatorChar()) {
 			state 	  = State.OPERATOR;
 			tokenType = TokenType.OPERATOR;
 		}
-		else if (isPunctuation()) {
-			state 	  = State.TOKEN_END;
+		else if (isPunctuationChar()) {
+			state 	  = State.PUNCTUATION;
 			tokenType = TokenType.PUNCTUATION;
 		}
-		else if (isWord()) {
+		else if (isWordChar()) {
 			state     = State.WORD;
 			tokenType = TokenType.VAR;
 		} 
-		else if (isNumber()) {
+		else if (isNumberChar()) {
 			state 	  = State.NUMBER;
 			tokenType = TokenType.INTEGER;
+		}
+		else if (isPunctuationChar()) {
+			state 	  = State.PUNCTUATION;
+			tokenType = TokenType.PUNCTUATION;
 		}
 		else if (isLineBreak()) {
 			line++;
@@ -236,15 +248,15 @@ public class Lexical {
 		return content == " " || content == "";
 	}
 	
-	public boolean isWord() {
+	public boolean isWordChar() {
 		return (code[position] >= 'a' && code[position] <= 'z') || (code[position] >= 'A' && code[position] <= 'Z');
 	}
 	
-	public boolean isUnderline() {
+	public boolean isUnderlineChar() {
 		return code[position] == '_';
 	}
 	
-	public boolean isNumber() {
+	public boolean isNumberChar() {
 		return code[position] >= '0' && code[position] <= '9';
 	}
 	
@@ -260,16 +272,16 @@ public class Lexical {
 		return isCarriageReturn() || isTab();
 	}
 	
-	public boolean isLineBreak() {
-		return code[position] == '\n';
-	}
-	
 	public boolean isCarriageReturn() {
 		return code[position] == '\r';
 	}
 	
 	public boolean isTab() {
 		return code[position] == '\t';
+	}
+	
+	public boolean isLineBreak() {
+		return code[position] == '\n';
 	}
 	
 	public boolean isTokenEnd() {
@@ -284,14 +296,13 @@ public class Lexical {
 		return keyWords.contains(tokenContent);
 	}
 	
-	public boolean isOperator() {
+	public boolean isOperatorChar() {
 		return code[position] == '<' || code[position] == '>' || code[position] == '=' || code[position] == '!' ||
 			   code[position] == '+' || code[position] == '-' || code[position] == '*' || code[position] == '/';
 	}
 	
-	public boolean isPunctuation() {
-		return code[position] == '(' || code[position] == ')' ||
-			   code[position] == '{' || code[position] == '}' || code[position] == ';';
+	public boolean isPunctuationChar() {
+		return code[position] == '{' || code[position] == '}' || code[position] == ';';
 	}
 
 	public void nextChar() {
@@ -333,6 +344,8 @@ public class Lexical {
 		this.attOperators.add("*=");
 		this.attOperators.add("/=");
 		this.attOperators.add("%=");
+		this.attOperators.add("++");
+		this.attOperators.add("--");
 	}
 	
 	public void setLogOperators() {
