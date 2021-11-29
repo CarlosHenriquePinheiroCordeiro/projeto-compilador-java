@@ -1,4 +1,8 @@
-
+/**
+ * Token do compilador
+ * @author Carlos Henrique Pinheiro Cordeiro
+ *
+ */
 public class Token {
 
 	private String content;

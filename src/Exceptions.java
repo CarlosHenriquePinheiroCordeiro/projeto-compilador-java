@@ -1,4 +1,8 @@
-
+/**
+ * Classe de exceções do compilador
+ * @author Carlos Henrique Pinheiro Cordeiro
+ *
+ */
 public class Exceptions {
 
 	public static void lexicalInvalidSymbol(char symbol, int line) {

@@ -2,6 +2,6 @@ program
 	begin
 		var num = 0;
 		for var x = 0; x < 10; x++ {
-			num *= num;
+			num++;
 		}
 	end

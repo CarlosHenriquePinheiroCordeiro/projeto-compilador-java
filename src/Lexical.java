@@ -57,6 +57,13 @@ public class Lexical {
 					break;
 					
 				case State.OPERATOR:
+					if (isCarriageReturn() || isPunctuationChar()) {
+						if (isOperatorChar() || isPunctuationChar()) {
+							return newToken(content);
+						}
+						state = State.TOKEN_END;
+						break;
+					}
 					content += code[position];
 					nextChar();
 					break;
@@ -78,7 +85,7 @@ public class Lexical {
 					}
 					else if (isCarriageReturn() || isOperatorChar() || isPunctuationChar()) {
 						if (isOperatorChar() || isPunctuationChar()) {
-							return new Token(content, tokenType);
+							return newToken(content);
 						}
 						state = State.TOKEN_END;
 						break;
@@ -101,7 +108,7 @@ public class Lexical {
  					}
 					else if (isCarriageReturn() || isPunctuationChar()) {
 						if (isOperatorChar() || isPunctuationChar()) {
-							return new Token(content, tokenType);
+							return newToken(content);
 						}
 						state = State.TOKEN_END;
 						break;
@@ -115,20 +122,25 @@ public class Lexical {
 						content += code[position];
 						state = State.TOKEN_END;
 						break;
-					
+						
 				case State.TOKEN_END:
 					nextChar();
 					if (!verifyToken(content)) {
 						state = State.INITIAL;
 						break;
 					}
-					return new Token(content, tokenType);
+					return newToken(content);
 					
 				case State.PROGRAM_END:
 					verifyToken(content);
-					return new Token(content, tokenType);
+					return newToken(content);
 			}
 		}
+	}
+	
+	public Token newToken(String content) {
+		verifyToken(content);
+		return new Token(content, tokenType);
 	}
 	 
 	public void takeState() {
@@ -153,10 +165,6 @@ public class Lexical {
 		else if (isNumberChar()) {
 			state 	  = State.NUMBER;
 			tokenType = TokenType.INTEGER;
-		}
-		else if (isPunctuationChar()) {
-			state 	  = State.PUNCTUATION;
-			tokenType = TokenType.PUNCTUATION;
 		}
 		else if (isLineBreak()) {
 			line++;
@@ -308,6 +316,10 @@ public class Lexical {
 	public void nextChar() {
 		position++;
 	}
+	
+	public int getLine() {
+		return this.line;
+	}
 
 	public void setCode(char[] code) {
 		this.code = code;
@@ -364,9 +376,6 @@ public class Lexical {
 		this.punOperators.add(")");
 		this.punOperators.add(";");
 	}
-	
-	
-	
 	
 	
 }
