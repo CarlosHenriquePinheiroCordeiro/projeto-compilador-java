@@ -10,6 +10,11 @@ public class Parser {
 	public Parser(Lexical lex) {
 		setLex(lex);
 	}
+	
+	public boolean Parse() {
+		
+		return true;
+	}
 
 	public void teste() {
 		for (int x = 0; x < 4; x ++) {

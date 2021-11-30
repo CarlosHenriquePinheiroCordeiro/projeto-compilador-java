@@ -16,7 +16,7 @@ public class TokenType {
 	public static final int LOG_OPERATOR = 8;
 	public static final int PUNCTUATION  = 9;
 	public static final int UNDEFINED    = 999;
-	public static final String[] state 	 = {"INTEGER", "REAL", "LITERAL", "ID", "KEYWORD", "OPERATOR",
+	public static final String[] type 	 = {"INTEGER", "REAL", "LITERAL", "ID", "KEYWORD", "OPERATOR",
 											"ASSIGNMENT OPERADOR", "MATH OPERATOR", "LOGICAL OPERATOR", "PUNCTUATION"};
 	
 	

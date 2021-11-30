@@ -31,7 +31,7 @@ public class Token {
 
 	@Override
 	public String toString() {
-		return "\nToken [content: '" + content + "'\n\t  type: " + TokenType.state[type] + "]";
+		return "\nToken [content: '" + content + "'\n\t  type: " + TokenType.type[type] + "]";
 	}
 	
 	

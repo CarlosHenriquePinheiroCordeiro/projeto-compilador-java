@@ -91,7 +91,7 @@ public class Lexical {
 						break;
 					}
 					else {
-						Exceptions.lexicalInvalidSymbol(code[position], line);
+						LexicalException.invalidSymbol(code[position], line);
 					}
 					break;
 					
@@ -99,7 +99,7 @@ public class Lexical {
 					if (isNumberChar() || isPoint()) {
 						if (isPoint()) {
 							if (tokenType == TokenType.REAL) {
-								Exceptions.lexicalRealPoints(line);
+								LexicalException.realPoints(line);
 							}
 							tokenType = TokenType.REAL;
 						}
@@ -114,7 +114,7 @@ public class Lexical {
 						break;
 					}
 					else {
-						Exceptions.lexicalInvalidSymbol(code[position], line);
+						LexicalException.invalidSymbol(code[position], line);
 					}
 					break;
 					
@@ -174,7 +174,7 @@ public class Lexical {
 			nextChar();
 		}
 		else {
-			Exceptions.lexicalInvalidSymbol(code[position], line);
+			LexicalException.invalidSymbol(code[position], line);
 		}
 	}
 	
@@ -204,13 +204,13 @@ public class Lexical {
 	
 	public void verifyLiteral(String content) {
 		if (sQuotes % 2 != 0 || dQuotes % 2 != 0) {
-			Exceptions.lexicalInvalidLiteral(content, line);
+			LexicalException.invalidLiteral(content, line);
 		}
 	}
 	
 	public void verifyWord(String content) {
 		if (content.endsWith("_")) {
-			Exceptions.lexicalUnderlineFinish(line);
+			LexicalException.underlineFinish(line);
 		}
 		if (isKeyWord(content)) {
 			tokenType = TokenType.KEYWORD;
@@ -221,7 +221,7 @@ public class Lexical {
 	
 	public void verifyNumber(String content) {
 		if (!content.matches("[0-9]{1,}.[0-9]{1,}") && !content.matches("[0-9]{1,}")) {
-			Exceptions.lexicalInvalidNumber(content, line);
+			LexicalException.invalidNumber(content, line);
 		}
 	}
 	
@@ -239,7 +239,7 @@ public class Lexical {
 			tokenType = TokenType.PUNCTUATION;
 		}
 		else {
-			Exceptions.lexicalInvalidOperator(content, line);
+			LexicalException.invalidOperator(content, line);
 		}
 	}
 	
