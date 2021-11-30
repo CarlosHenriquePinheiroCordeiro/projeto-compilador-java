@@ -11,23 +11,23 @@ public class Lexical {
 	private char[] code;
 	private List<String> keyWords  	   = new ArrayList<String>();
 	private List<String> mathOperators = new ArrayList<String>();
-	private List<String> attOperators  = new ArrayList<String>();
+	private List<String> assOperators  = new ArrayList<String>();
 	private List<String> logOperators  = new ArrayList<String>();
 	private List<String> punOperators  = new ArrayList<String>();
 	private List<Token>  tokens 	   = new ArrayList<Token>();
 	
-	private int position  		   	   = 0;
-	private int line 	 	 	       = 1;
-	private int sQuotes 		       = 0;
-	private int dQuotes 			   = 0;
-	private int state 	  		       = State.INITIAL;
-	private int tokenType 		       = TokenType.UNDEFINED;
+	private int  position  		   	   = 0;
+	private int  line 	 	 	       = 1;
+	private int  sQuotes 		       = 0;
+	private int  dQuotes 			   = 0;
+	private int  state 	  		       = State.INITIAL;
+	private byte tokenType 		       = TokenType.UNDEFINED;
 	
 	public Lexical(char[] code) {
 		setCode(code);
 		setKeyWords();
 		setMathOperators();
-		setAttOperators();
+		setAssOperators();
 		setLogOperators();
 	}
 
@@ -212,7 +212,16 @@ public class Lexical {
 		if (content.endsWith("_")) {
 			LexicalException.underlineFinish(line);
 		}
-		if (isKeyWord(content)) {
+		else if (isProgramBeginning(content)) {
+			tokenType = TokenType.PROGRAM;
+		}
+		else if (isBegin(content)) {
+			tokenType = TokenType.BEGIN;
+		}
+		else if (isEnd(content)) {
+			tokenType = TokenType.END;
+		}
+		else if (isKeyWord(content) && !isProgramBeginning(content) && !isBegin(content) && !isEnd(content)) {
 			tokenType = TokenType.KEYWORD;
 		} else {
 			tokenType = TokenType.VAR;
@@ -229,8 +238,8 @@ public class Lexical {
 		if (mathOperators.contains(content)) {
 			tokenType = TokenType.MAT_OPERATOR;
 		}
-		else if (attOperators.contains(content)) {
-			tokenType = TokenType.ATT_OPERATOR;
+		else if (assOperators.contains(content)) {
+			tokenType = TokenType.ASS_OPERATOR;
 		}
 		else if (logOperators.contains(content)) {
 			tokenType = TokenType.LOG_OPERATOR;
@@ -312,6 +321,18 @@ public class Lexical {
 	public boolean isPunctuationChar() {
 		return code[position] == '{' || code[position] == '}' || code[position] == ';';
 	}
+	
+	public boolean isProgramBeginning(String content) {
+		return content.equals(keyWords.get(TokenType.PROGRAM));
+	}
+	
+	public boolean isBegin(String content) {
+		return content.equals(keyWords.get(TokenType.BEGIN));
+	}
+	
+	public boolean isEnd(String content) {
+		return content.equals(keyWords.get(TokenType.END));
+	}
 
 	public void nextChar() {
 		position++;
@@ -327,9 +348,9 @@ public class Lexical {
 
 	public void setKeyWords() {
 		this.keyWords.add("program");
-		this.keyWords.add("var");
 		this.keyWords.add("begin");
 		this.keyWords.add("end");
+		this.keyWords.add("var");
 		this.keyWords.add("while");
 		this.keyWords.add("do");
 		this.keyWords.add("for");
@@ -349,15 +370,15 @@ public class Lexical {
 		this.mathOperators.add("%");
 	}
 	
-	public void setAttOperators() {
-		this.attOperators.add("=");
-		this.attOperators.add("+=");
-		this.attOperators.add("-=");
-		this.attOperators.add("*=");
-		this.attOperators.add("/=");
-		this.attOperators.add("%=");
-		this.attOperators.add("++");
-		this.attOperators.add("--");
+	public void setAssOperators() {
+		this.assOperators.add("=");
+		this.assOperators.add("+=");
+		this.assOperators.add("-=");
+		this.assOperators.add("*=");
+		this.assOperators.add("/=");
+		this.assOperators.add("%=");
+		this.assOperators.add("++");
+		this.assOperators.add("--");
 	}
 	
 	public void setLogOperators() {

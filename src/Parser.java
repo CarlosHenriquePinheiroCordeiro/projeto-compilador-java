@@ -9,16 +9,26 @@ public class Parser {
 	
 	public Parser(Lexical lex) {
 		setLex(lex);
+		program();
+		begin();
 	}
 	
-	public boolean Parse() {
+	public boolean parse() {
 		
 		return true;
 	}
 
-	public void teste() {
-		for (int x = 0; x < 4; x ++) {
-			System.out.println(getLex().newToken());
+	public void program() {
+		Token token = lex.newToken();
+		if (token.getType() != TokenType.PROGRAM) {
+			SyntaxException.invalidProgram(token, lex.getLine());
+		}
+	}
+	
+	public void begin() {
+		Token token = lex.newToken();
+		if (token.getType() != TokenType.BEGIN) {
+			SyntaxException.invalidStart(token, lex.getLine());
 		}
 	}
 	

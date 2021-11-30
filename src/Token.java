@@ -6,9 +6,9 @@
 public class Token {
 
 	private String content;
-	private int    type;
+	private byte    type;
 	
-	public Token(String content, int type) {
+	public Token(String content, byte type) {
 		setContent(content);
 		setType(type);
 	}
@@ -25,7 +25,7 @@ public class Token {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(byte type) {
 		this.type = type;
 	}
 
