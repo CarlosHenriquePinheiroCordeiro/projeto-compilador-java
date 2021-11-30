@@ -10,7 +10,6 @@ public class Parser {
 	public Parser(Lexical lex) {
 		setLex(lex);
 		program();
-		begin();
 	}
 	
 	public boolean parse() {
@@ -23,6 +22,7 @@ public class Parser {
 		if (token.getType() != TokenType.PROGRAM) {
 			SyntaxException.invalidProgram(token, lex.getLine());
 		}
+		begin();
 	}
 	
 	public void begin() {
@@ -30,6 +30,10 @@ public class Parser {
 		if (token.getType() != TokenType.BEGIN) {
 			SyntaxException.invalidStart(token, lex.getLine());
 		}
+	}
+	
+	public void end() {
+		
 	}
 	
 	public Lexical getLex() {

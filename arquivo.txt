@@ -1,15 +1,8 @@
 program
 	begin
 		var nome = "Carlos";
-		for var x = 0; x < 3; x++ {
-			if x == 1 {
-				nome += " Henrique";			
-			}
-			else if x == 2 {
-				nome += " Pinheiro";
-			}
-			else if x == 3 {
-				nome += " Cordeiro";
-			}
-		}
+		var x = 0;
+		do {
+			x++;
+		} while nome != "Carlos" 
 	end
