@@ -319,7 +319,7 @@ public class Lexical {
 	}
 	
 	public boolean isPunctuationChar() {
-		return code[position] == '{' || code[position] == '}' || code[position] == ';';
+		return code[position] == ';';
 	}
 	
 	public boolean isProgramBeginning(String content) {
@@ -391,10 +391,6 @@ public class Lexical {
 	}
 
 	public void setPunOperators() {
-		this.punOperators.add("{");
-		this.punOperators.add("}");
-		this.punOperators.add("(");
-		this.punOperators.add(")");
 		this.punOperators.add(";");
 	}
 	

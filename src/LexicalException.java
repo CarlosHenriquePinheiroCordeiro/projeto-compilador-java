@@ -1,5 +1,5 @@
 /**
- * Classe de exceções do compilador
+ * Classe de exceções da análise léxica
  * @author Carlos Henrique Pinheiro Cordeiro
  *
  */
