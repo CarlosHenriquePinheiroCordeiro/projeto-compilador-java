@@ -17,6 +17,10 @@ public class SyntaxException {
 		throw new RuntimeException(getError()+"Expected end token ('end'). \'"+token.getContent()+"\' ("+TokenType.type[token.getType()]+") given."+getLine(line));
 	}
 	
+	public static void invalidTerm(Token token, int line) {
+		throw new RuntimeException(getError()+"Expected var or number. ("+TokenType.type[token.getType()]+") given."+getLine(line));
+	}
+	
 	private static String getError() {
 		return "Syntax Error: ";
 	}

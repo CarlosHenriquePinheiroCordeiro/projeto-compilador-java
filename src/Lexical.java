@@ -16,13 +16,18 @@ public class Lexical {
 	private List<String> punOperators  = new ArrayList<String>();
 	private List<Token>  tokens 	   = new ArrayList<Token>();
 	
-	private int  position  		   	   = 0;
-	private int  line 	 	 	       = 1;
-	private int  sQuotes 		       = 0;
-	private int  dQuotes 			   = 0;
-	private int  state 	  		       = State.INITIAL;
-	private byte tokenType 		       = TokenType.UNDEFINED;
+	private int     position  = 0;
+	private int     line 	  = 1;
+	private int     sQuotes   = 0;
+	private int     dQuotes   = 0;
+	private int     state 	  = State.INITIAL;
+	private byte    tokenType = TokenType.UNDEFINED;
+	private boolean finish 	  = false;
 	
+	/**
+	 * Construtor que instancia as palavras chave e operadores para a análise léxica
+	 * @param code
+	 */
 	public Lexical(char[] code) {
 		setCode(code);
 		setKeyWords();
@@ -31,6 +36,10 @@ public class Lexical {
 		setLogOperators();
 	}
 
+	/**
+	 * Retorna uma lista de tokens lexicalmente analisados com sucesso
+	 * @return lista com tokens corretos
+	 */
 	public List<Token> analisys() {
 		do {
 			tokens.add(newToken());
@@ -38,13 +47,18 @@ public class Lexical {
 		return tokens;
 	}
 	
+	/**
+	 * Realiza a análise léxica de um novo token, percorrendo todos os tokens do programa analisado a cada chamada deste método
+	 * @return novo token corretamente analisado
+	 */
 	public Token newToken() {
 		String content = "";
 		state 		   = State.INITIAL;
 		tokenType 	   = TokenType.UNDEFINED;
 		while (true) {
 			if (isProgramEnd()) {
-				state = State.PROGRAM_END;
+				state  = State.PROGRAM_END;
+				finish = true;
 			}
 			else if (isTokenEnd()) {
 				if (state != State.LITERAL) {
@@ -138,11 +152,19 @@ public class Lexical {
 		}
 	}
 	
+	/**
+	 * Função que realiza as validações finais de um token quanto ao seu tipo, e o retorna se tudo correto
+	 * @param content conteúdo a ser inserido no token
+	 * @return
+	 */
 	public Token newToken(String content) {
 		verifyToken(content);
 		return new Token(content, tokenType);
 	}
-	 
+	
+	/**
+	 * Define o estado da análise, de forma que este analisador léxico tem a ideia de ser um autômato (máquina de estado)
+	 */
 	public void takeState() {
 		if (isQuote()) {
 			state     = State.LITERAL;
@@ -178,6 +200,11 @@ public class Lexical {
 		}
 	}
 	
+	/**
+	 * Realiza as verificações do conteúdo a ser inserido no token, assim definido o seu tipo
+	 * @param content conteúdo a ser inserido no token
+	 * @return
+	 */
 	public boolean verifyToken(String content) {
 		switch (tokenType) {
 		case TokenType.LITERAL:
@@ -202,12 +229,20 @@ public class Lexical {
 		return true;
 	}
 	
+	/**
+	 * Verifica se a literal está corretamente montado
+	 * @param content
+	 */
 	public void verifyLiteral(String content) {
 		if (sQuotes % 2 != 0 || dQuotes % 2 != 0) {
 			LexicalException.invalidLiteral(content, line);
 		}
 	}
 	
+	/**
+	 * Verifica se a palavra está corretamente montada
+	 * @param content
+	 */
 	public void verifyWord(String content) {
 		if (content.endsWith("_")) {
 			LexicalException.underlineFinish(line);
@@ -228,12 +263,20 @@ public class Lexical {
 		}
 	}
 	
+	/**
+	 * Verifica se o número está corretamente montado
+	 * @param content
+	 */
 	public void verifyNumber(String content) {
 		if (!content.matches("[0-9]{1,}.[0-9]{1,}") && !content.matches("[0-9]{1,}")) {
 			LexicalException.invalidNumber(content, line);
 		}
 	}
 	
+	/**
+	 * Verifica o tipo do perador e se ele está corretamente montado
+	 * @param content
+	 */
 	public void verifyOperator(String content) {
 		if (mathOperators.contains(content)) {
 			tokenType = TokenType.MAT_OPERATOR;
@@ -252,6 +295,9 @@ public class Lexical {
 		}
 	}
 	
+	/**
+	 * Realiza a contagem das aspas para a montagem de literais
+	 */
 	public void plusQuotes() {
 		if (code[position] == '\'') {
 			sQuotes++;
@@ -261,91 +307,185 @@ public class Lexical {
 		}
 	}
 	
+	/**
+	 * Verifica se o conteúdo é nulo
+	 * @param content
+	 * @return
+	 */
 	public boolean isNullContent(String content) {
 		return content == " " || content == "";
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é uma letra do alfabeto
+	 * @return
+	 */
 	public boolean isWordChar() {
 		return (code[position] >= 'a' && code[position] <= 'z') || (code[position] >= 'A' && code[position] <= 'Z');
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é um underline
+	 * @return
+	 */
 	public boolean isUnderlineChar() {
 		return code[position] == '_';
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é um número
+	 * @return
+	 */
 	public boolean isNumberChar() {
 		return code[position] >= '0' && code[position] <= '9';
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é um ponto
+	 * @return
+	 */
 	public boolean isPoint() {
 		return code[position] == '.';
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é uma aspa simples ou dupla
+	 * @return
+	 */
 	public boolean isQuote() {
 		return code[position] == '\'' || code[position] == '\"';
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é um caracter de tabulação
+	 * @return
+	 */
 	public boolean isTabChar() {
 		return isCarriageReturn() || isTab();
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é uma volta para o início de uma linha
+	 * @return
+	 */
 	public boolean isCarriageReturn() {
 		return code[position] == '\r';
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é um 'tab'
+	 * @return
+	 */
 	public boolean isTab() {
 		return code[position] == '\t';
 	}
 	
+	/**
+	 * Verifica se o caracter em questão é uma quebra de linha
+	 * @return
+	 */
 	public boolean isLineBreak() {
 		return code[position] == '\n';
 	}
 	
+	/**
+	 * Verifica se um token chegou ao fim, por um espaço
+	 * @return
+	 */
 	public boolean isTokenEnd() {
 		return code[position] == ' ';
 	}
 	
-	public boolean isProgramEnd() {
-		return position == code.length;
-	}
-	
-	public boolean isKeyWord(String tokenContent) {
-		return keyWords.contains(tokenContent);
-	}
-	
+	/**
+	 * Verifica se o caractere em questão é um tipo de operador
+	 * @return
+	 */
 	public boolean isOperatorChar() {
 		return code[position] == '<' || code[position] == '>' || code[position] == '=' || code[position] == '!' ||
 			   code[position] == '+' || code[position] == '-' || code[position] == '*' || code[position] == '/';
 	}
 	
+	/**
+	 * Verifica se o caractere em questão é um caractere de pontuação final, o ponto e vírgula
+	 * @return
+	 */
 	public boolean isPunctuationChar() {
 		return code[position] == ';';
 	}
 	
+	/**
+	 * Verifica se a análise chegou ao fim do programa, ou seja, não restam  mais caracteres para serem analisados
+	 * @return
+	 */
+	public boolean isProgramEnd() {
+		return position == code.length;
+	}
+	
+	/**
+	 * Verifica se o conteúdo do token a ser inserido é uma palavra chave
+	 * @return
+	 */
+	public boolean isKeyWord(String tokenContent) {
+		return keyWords.contains(tokenContent);
+	}
+	
+	/**
+	 * Verifica se o conteúdo do token a ser inserido é o início do programa ('program')
+	 * @return
+	 */
 	public boolean isProgramBeginning(String content) {
 		return content.equals(keyWords.get(TokenType.PROGRAM));
 	}
 	
+	/**
+	 * Verifica se o conteúdo do token a ser inserido é um início de bloco de instruções ('begin')
+	 * @return
+	 */
 	public boolean isBegin(String content) {
 		return content.equals(keyWords.get(TokenType.BEGIN));
 	}
 	
+	/**
+	 * Verifica se o conteúdo do token a ser inserido é um fim de bloco de instruções ('end')
+	 * @return
+	 */
 	public boolean isEnd(String content) {
 		return content.equals(keyWords.get(TokenType.END));
 	}
+	
+	/**
+	 * Retorna o atributo que indica se o programa acabou e não há mais tokens para serem analisados
+	 * @return
+	 */
+	public boolean isFinish() {
+		return this.finish;
+	}
 
+	/**
+	 * Avança a análise para o próximo caractere
+	 */
 	public void nextChar() {
 		position++;
 	}
 	
+	/**
+	 * Retorna a linha atual em que a análise se encontra
+	 * @return
+	 */
 	public int getLine() {
 		return this.line;
 	}
 
+	/**
+	 * Define os caracteres do programa em questão a ser analisado
+	 */
 	public void setCode(char[] code) {
 		this.code = code;
 	}
 
+	/**
+	 * Define as palavras reservadas do programa
+	 */
 	public void setKeyWords() {
 		this.keyWords.add("program");
 		this.keyWords.add("begin");
@@ -362,6 +502,9 @@ public class Lexical {
 		this.keyWords.add("until");
 	}
 	
+	/**
+	 * Define os operadores matemáticos do programa
+	 */
 	public void setMathOperators() {
 		this.mathOperators.add("+");
 		this.mathOperators.add("-");
@@ -370,6 +513,13 @@ public class Lexical {
 		this.mathOperators.add("%");
 	}
 	
+	public List<String> getMathOperators() {
+		return this.mathOperators;
+	}
+	
+	/**
+	 * Define os operadores de atribuição do programa
+	 */
 	public void setAssOperators() {
 		this.assOperators.add("=");
 		this.assOperators.add("+=");
@@ -381,6 +531,13 @@ public class Lexical {
 		this.assOperators.add("--");
 	}
 	
+	public List<String> getAssOperators() {
+		return this.assOperators;
+	}
+	
+	/**
+	 * Define os operadores lógicos do programa
+	 */
 	public void setLogOperators() {
 		this.logOperators.add("==");
 		this.logOperators.add("!=");
@@ -390,8 +547,19 @@ public class Lexical {
 		this.logOperators.add("<");
 	}
 
+	public List<String> getLogOperators() {
+		return this.logOperators;
+	}
+
+	/**
+	 * Define os operadores de pontuação do programa
+	 */
 	public void setPunOperators() {
 		this.punOperators.add(";");
+	}
+
+	public List<String> getPunOperators() {
+		return this.punOperators;
 	}
 	
 	
