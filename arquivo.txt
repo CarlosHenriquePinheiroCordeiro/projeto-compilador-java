@@ -4,6 +4,5 @@ program
 		var x = 0;
 		while nome != "Carlos" do
 		begin
-			var++;
-		end 
-	end
+			var x++;
+		end

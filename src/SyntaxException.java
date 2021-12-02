@@ -9,7 +9,7 @@ public class SyntaxException {
 		throw new RuntimeException(getError()+"Program definition ('program') expected at the document beginning. \'"+token.getContent()+"\' ("+TokenType.type[token.getType()]+") given."+getLine(line));
 	}
 	
-	public static void invalidStart(Token token, int line) {
+	public static void invalidBegin(Token token, int line) {
 		throw new RuntimeException(getError()+"Initial symbol ('begin') expected at the code beginning. \'"+token.getContent()+"\' ("+TokenType.type[token.getType()]+") given."+getLine(line));
 	}
 	

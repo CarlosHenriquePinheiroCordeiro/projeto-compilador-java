@@ -28,6 +28,10 @@ public class Parser {
 		if (!isProgram(token)) {
 			SyntaxException.invalidProgram(token, getLex().getLine());
 		}
+		token = nextToken();
+		if (!isBegin(token)) {
+			SyntaxException.invalidBegin(token, getLex().getLine());
+		}
 		begin();
 	}
 	
@@ -35,10 +39,6 @@ public class Parser {
 	 * Representando o 'begin', define começo de um bloco de instruções, dando continuidade chamando o 'statement_list' e o 'end'
 	 */
 	public void begin() {
-		Token token = nextToken();
-		if (!isBegin(token)) {
-			SyntaxException.invalidStart(token, getLex().getLine());
-		}
 		statementList();
 		end();
 	}
@@ -48,12 +48,12 @@ public class Parser {
 	 */
 	public void statementList() {
 		Token token = nextToken();
+		String content = token.getContent();
 		if (isBegin(token)) {
 			begin();
 		}
-		statement();
-		if (isEnd(token)) {
-			end();
+		if (!isEnd(token)) {
+			statement();
 		}
 	}
 	
@@ -63,6 +63,13 @@ public class Parser {
 	public void statement() {
 		expression();
 		Token token = nextToken();
+		String content = token.getContent();
+		if (isBegin(token)) {
+			begin();
+		}
+		if (isKeyword(token)) {
+			statement();
+		}
 		if (isPunctuation(token)) {
 			statementList();
 		}
@@ -81,6 +88,7 @@ public class Parser {
 	 */
 	public void term() {
 		Token token = nextToken();
+		String content = token.getContent();
 		if (!isTerm(token)) {
 			SyntaxException.invalidTerm(token, getLex().getLine());
 		}
@@ -92,6 +100,7 @@ public class Parser {
 	 */
 	public void expressionI() {
 		Token token = nextToken();
+		String content = token.getContent();
 		if (isOperator(token)) {
 			term();
 			expressionI();
@@ -103,6 +112,7 @@ public class Parser {
 	 */
 	public void end() {
 		Token token = nextToken();
+		String content = token.getContent();
 		if (!isEnd(token)) {
 			SyntaxException.invalidEnd(token, getLex().getLine());
 		}
@@ -149,7 +159,7 @@ public class Parser {
 	 * @param token
 	 * @return
 	 */
-	public boolean isKeyWord(Token token) {
+	public boolean isKeyword(Token token) {
 		return token.getType() == TokenType.KEYWORD;
 	}
 	

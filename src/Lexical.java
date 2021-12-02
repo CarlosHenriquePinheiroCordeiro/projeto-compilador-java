@@ -13,6 +13,7 @@ public class Lexical {
 	private List<String> mathOperators = new ArrayList<String>();
 	private List<String> assOperators  = new ArrayList<String>();
 	private List<String> logOperators  = new ArrayList<String>();
+	private List<String> unOperators   = new ArrayList<String>();
 	private List<String> punOperators  = new ArrayList<String>();
 	private List<Token>  tokens 	   = new ArrayList<Token>();
 	
@@ -34,6 +35,7 @@ public class Lexical {
 		setMathOperators();
 		setAssOperators();
 		setLogOperators();
+		setUnOperators();
 	}
 
 	/**
@@ -207,21 +209,21 @@ public class Lexical {
 	 */
 	public boolean verifyToken(String content) {
 		switch (tokenType) {
-		case TokenType.LITERAL:
-			verifyLiteral(content);
-			break;
-		case TokenType.VAR:
-			verifyWord(content);
-			break;
-		case TokenType.INTEGER:
-			verifyNumber(content);
-			break;
-		case TokenType.REAL:
-			verifyNumber(content);
-			break;
-		case TokenType.OPERATOR:
-			verifyOperator(content);
-			break;
+			case TokenType.LITERAL:
+				verifyLiteral(content);
+				break;
+			case TokenType.VAR:
+				verifyWord(content);
+				break;
+			case TokenType.INTEGER:
+				verifyNumber(content);
+				break;
+			case TokenType.REAL:
+				verifyNumber(content);
+				break;
+			case TokenType.OPERATOR:
+				verifyOperator(content);
+				break;
 		}
 		if (isNullContent(content)) {
 			return false;
@@ -286,6 +288,9 @@ public class Lexical {
 		}
 		else if (logOperators.contains(content)) {
 			tokenType = TokenType.LOG_OPERATOR;
+		}
+		else if (unOperators.contains(content)) {
+			tokenType = TokenType.UN_OPERATOR;
 		}
 		else if (punOperators.contains(content)) {
 			tokenType = TokenType.PUNCTUATION;
@@ -527,8 +532,6 @@ public class Lexical {
 		this.assOperators.add("*=");
 		this.assOperators.add("/=");
 		this.assOperators.add("%=");
-		this.assOperators.add("++");
-		this.assOperators.add("--");
 	}
 	
 	public List<String> getAssOperators() {
@@ -549,6 +552,15 @@ public class Lexical {
 
 	public List<String> getLogOperators() {
 		return this.logOperators;
+	}
+	
+	public void setUnOperators() {
+		this.unOperators.add("++");
+		this.unOperators.add("--");
+	}
+	
+	public List<String> getUnOperators() {
+		return this.unOperators;
 	}
 
 	/**

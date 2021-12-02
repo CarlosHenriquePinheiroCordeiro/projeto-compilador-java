@@ -17,8 +17,9 @@ public class TokenType {
 	public static final byte ASS_OPERATOR = 9;
 	public static final byte MAT_OPERATOR = 11;
 	public static final byte LOG_OPERATOR = 12;
-	public static final byte PUNCTUATION  = 13;
-	public static final byte UNDEFINED    = 14;
+	public static final byte UN_OPERATOR  = 13;
+	public static final byte PUNCTUATION  = 14;
+	public static final byte UNDEFINED    = 15;
 	public static final String[] type 	 = {
 											"PROGRAM"			 , 
 											"BEGIN"				 , 
@@ -32,8 +33,10 @@ public class TokenType {
 											"ASSIGNMENT OPERADOR",
 											null				 , 
 											"MATH OPERATOR"		 , 
-											"LOGICAL OPERATOR"	 , 
-											"PUNCTUATION"
+											"LOGICAL OPERATOR"	 ,
+											"UNARY OPERATOR" 	 ,
+											"PUNCTUATION"		 ,
+											"UNDEFINED"
 											};
 	
 	
