@@ -1,8 +1,5 @@
 program
 	begin
 		var nome = "Carlos";
-		var x = 0;
-		while nome != "Carlos" do
-		begin
-			var x++;
-		end
+	end
+	

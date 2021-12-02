@@ -40,7 +40,6 @@ public class Parser {
 	 */
 	public void begin() {
 		statementList();
-		end();
 	}
 	
 	/**
@@ -55,6 +54,7 @@ public class Parser {
 		if (!isEnd(token)) {
 			statement();
 		}
+		end();
 	}
 	
 	/**
