@@ -9,69 +9,26 @@ public class Parser {
 	
 	public Parser(Lexical lex) {
 		setLex(lex);
+		parse();
 	}
 	
 	/**
 	 * Início da análise sintática
-	 * @return
 	 */
-	public boolean parse() {
-		program();
-		return true;
-	}
-
-	/**
-	 * Representando o 'program', analisa o início do programa e se este começa com 'program', definindo o programa em si
-	 */
-	public void program() {
-		Token token = nextToken();
-		if (!isProgram(token)) {
-			SyntaxException.invalidProgram(token, getLex().getLine());
-		}
-		token = nextToken();
-		if (!isBegin(token)) {
-			SyntaxException.invalidBegin(token, getLex().getLine());
-		}
-		begin();
-	}
-	
-	/**
-	 * Representando o 'begin', define começo de um bloco de instruções, dando continuidade chamando o 'statement_list' e o 'end'
-	 */
-	public void begin() {
-		statementList();
-	}
-	
-	/**
-	 * Representando o 'statement_list', chama os devidos blocos de início ('begin'), instruções ('statement') e fim ('end')
-	 */
-	public void statementList() {
-		Token token = nextToken();
-		String content = token.getContent();
-		if (isBegin(token)) {
-			begin();
-		}
-		if (!isEnd(token)) {
-			statement();
-		}
-		end();
+	public void parse() {
+		statement();
 	}
 	
 	/**
 	 * Representando o 'statement', define uma instrução do programa
 	 */
 	public void statement() {
-		expression();
 		Token token = nextToken();
-		String content = token.getContent();
-		if (isBegin(token)) {
-			begin();
-		}
-		if (isKeyword(token)) {
-			statement();
-		}
-		if (isPunctuation(token)) {
-			statementList();
+		if (!isFinish(token)) {
+			if (isKeyword(token) || isPunctuation(token)) {
+				statement();
+			}
+			expression();
 		}
 	}
 	
@@ -87,11 +44,7 @@ public class Parser {
 	 * Representando o 'term', define o termo de uma expressão, sendo uma variável ou um número
 	 */
 	public void term() {
-		Token token = nextToken();
-		String content = token.getContent();
-		if (!isTerm(token)) {
-			SyntaxException.invalidTerm(token, getLex().getLine());
-		}
+		
 	}
 	
 	/**
@@ -99,50 +52,7 @@ public class Parser {
 	 * de forma recursiva, continuando ou não a expressão
 	 */
 	public void expressionI() {
-		Token token = nextToken();
-		String content = token.getContent();
-		if (isOperator(token)) {
-			term();
-			expressionI();
-		}
-	}
-	
-	/**
-	 * Representando o 'end', define um fim de bloco de instruções do programa
-	 */
-	public void end() {
-		Token token = nextToken();
-		String content = token.getContent();
-		if (!isEnd(token)) {
-			SyntaxException.invalidEnd(token, getLex().getLine());
-		}
-	}
-	
-	/**
-	 * Retorna se o token é um 'program'
-	 * @param token
-	 * @return
-	 */
-	public boolean isProgram(Token token) {
-		return token.getType() == TokenType.PROGRAM;
-	}
-	
-	/**
-	 * Retorna se o token é um 'begin'
-	 * @param token
-	 * @return
-	 */
-	public boolean isBegin(Token token) {
-		return token.getType() == TokenType.BEGIN;
-	}
-	
-	/**
-	 * Retorna se o token é um 'end'
-	 * @param token
-	 * @return
-	 */
-	public boolean isEnd(Token token) {
-		return token.getType() == TokenType.END;
+		
 	}
 	
 	/**
@@ -184,6 +94,15 @@ public class Parser {
 	}
 	
 	/**
+	 * Retora se o token é um operador unário
+	 * @param token
+	 * @return
+	 */
+	public boolean isUnaryOperator(Token token) {
+		return getLex().getUnOperators().contains(token.getContent());
+	}
+	
+	/**
 	 * Retorna se o token é uma variável
 	 * @param token
 	 * @return
@@ -211,11 +130,23 @@ public class Parser {
 	}
 	
 	/**
+	 * Retorna se o token é nulo, ou seja, o programa chegou ao fim
+	 * @param token
+	 * @return
+	 */
+	public boolean isFinish(Token token) {
+		return token == null;
+	}
+	
+	/**
 	 * Retorna o próximo token vindo da análise léxica para a análise sintática
 	 * @param token
 	 * @return
 	 */
 	public Token nextToken() {
+		if (getLex().isFinish()) {
+			return null;
+		}
 		return getLex().newToken();
 	}
 	

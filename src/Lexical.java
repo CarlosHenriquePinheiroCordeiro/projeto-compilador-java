@@ -249,16 +249,7 @@ public class Lexical {
 		if (content.endsWith("_")) {
 			LexicalException.underlineFinish(line);
 		}
-		else if (isProgramBeginning(content)) {
-			tokenType = TokenType.PROGRAM;
-		}
-		else if (isBegin(content)) {
-			tokenType = TokenType.BEGIN;
-		}
-		else if (isEnd(content)) {
-			tokenType = TokenType.END;
-		}
-		else if (isKeyWord(content) && !isProgramBeginning(content) && !isBegin(content) && !isEnd(content)) {
+		else if (isKeyWord(content)) {
 			tokenType = TokenType.KEYWORD;
 		} else {
 			tokenType = TokenType.VAR;
@@ -432,30 +423,6 @@ public class Lexical {
 	 */
 	public boolean isKeyWord(String tokenContent) {
 		return keyWords.contains(tokenContent);
-	}
-	
-	/**
-	 * Verifica se o conteúdo do token a ser inserido é o início do programa ('program')
-	 * @return
-	 */
-	public boolean isProgramBeginning(String content) {
-		return content.equals(keyWords.get(TokenType.PROGRAM));
-	}
-	
-	/**
-	 * Verifica se o conteúdo do token a ser inserido é um início de bloco de instruções ('begin')
-	 * @return
-	 */
-	public boolean isBegin(String content) {
-		return content.equals(keyWords.get(TokenType.BEGIN));
-	}
-	
-	/**
-	 * Verifica se o conteúdo do token a ser inserido é um fim de bloco de instruções ('end')
-	 * @return
-	 */
-	public boolean isEnd(String content) {
-		return content.equals(keyWords.get(TokenType.END));
 	}
 	
 	/**
