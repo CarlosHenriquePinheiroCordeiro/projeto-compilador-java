@@ -5,8 +5,15 @@
  */
 public class Parser {
 	
+	/**
+	 * Analisador Léxico para o Parser (Analisador Sintático)
+	 */
 	private Lexical lex;
 	
+	/**
+	 * Construtor que inicia a análise sintática
+	 * @param lex
+	 */
 	public Parser(Lexical lex) {
 		setLex(lex);
 		parse();
@@ -19,12 +26,14 @@ public class Parser {
 		start();
 	}
 	
+	/**
+	 * Representa o ponto de partida do programa, devendo começar com um termo
+	 */
 	public void start() {
 		Token token = nextToken();
 		if (!isTerm(token)) {
 			SyntaxException.invalidTerm(token, getLex().getLine());
 		}
-		System.out.println(token.getContent());
 		expression();
 	}
 	
@@ -43,7 +52,6 @@ public class Parser {
 		Token token = nextToken();
 		if (!isFinish(token)) {
 			if (!isPunctuation(token)) {
-				System.out.println(token.getContent());
 				expressionI();
 			}
 		}
@@ -56,22 +64,14 @@ public class Parser {
 	public void expressionI() {
 		Token token = nextToken();
 		if (!isFinish(token)) {
-			System.out.println(token.getContent());
-			if (isOperator(token) && !isUnaryOperator(token)) {
+			if (isOperator(token)) {
+				token = nextToken();
+				if (isOperator(token)) {
+					SyntaxException.invalidTerm(token, getLex().getLine());
+				}
 				expressionI();
 			}
 			term();
-		}
-	}
-	
-	public void punctuation() {
-		Token token = nextToken();
-		if (!isFinish(token)) {
-			if (!isPunctuation(token)) {
-				SyntaxException.invalidPunctuation(token, getLex().getLine());
-			}
-			System.out.println(token.getContent());
-			expression();
 		}
 	}
 	
