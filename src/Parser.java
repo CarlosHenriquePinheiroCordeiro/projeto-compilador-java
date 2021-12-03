@@ -16,20 +16,16 @@ public class Parser {
 	 * Início da análise sintática
 	 */
 	public void parse() {
-		statement();
+		start();
 	}
 	
-	/**
-	 * Representando o 'statement', define uma instrução do programa
-	 */
-	public void statement() {
+	public void start() {
 		Token token = nextToken();
-		if (!isFinish(token)) {
-			if (isKeyword(token) || isPunctuation(token)) {
-				statement();
-			}
-			expression();
+		if (!isTerm(token)) {
+			SyntaxException.invalidTerm(token, getLex().getLine());
 		}
+		System.out.println(token.getContent());
+		expression();
 	}
 	
 	/**
@@ -44,7 +40,13 @@ public class Parser {
 	 * Representando o 'term', define o termo de uma expressão, sendo uma variável ou um número
 	 */
 	public void term() {
-		
+		Token token = nextToken();
+		if (!isFinish(token)) {
+			if (!isPunctuation(token)) {
+				System.out.println(token.getContent());
+				expressionI();
+			}
+		}
 	}
 	
 	/**
@@ -52,7 +54,25 @@ public class Parser {
 	 * de forma recursiva, continuando ou não a expressão
 	 */
 	public void expressionI() {
-		
+		Token token = nextToken();
+		if (!isFinish(token)) {
+			System.out.println(token.getContent());
+			if (isOperator(token) && !isUnaryOperator(token)) {
+				expressionI();
+			}
+			term();
+		}
+	}
+	
+	public void punctuation() {
+		Token token = nextToken();
+		if (!isFinish(token)) {
+			if (!isPunctuation(token)) {
+				SyntaxException.invalidPunctuation(token, getLex().getLine());
+			}
+			System.out.println(token.getContent());
+			expression();
+		}
 	}
 	
 	/**
@@ -61,7 +81,7 @@ public class Parser {
 	 * @return
 	 */
 	public boolean isTerm(Token token) {
-		return isVar(token) || isNumber(token) || isLiteral(token);
+		return isKeyword(token) || isVar(token) || isNumber(token) || isLiteral(token);
 	}
 	
 	/**

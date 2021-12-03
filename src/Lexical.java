@@ -141,9 +141,14 @@ public class Lexical {
 						
 				case State.TOKEN_END:
 					nextChar();
+					
 					if (!verifyToken(content)) {
 						state = State.INITIAL;
 						break;
+					}
+					if (isProgramEnd()) {
+						state  = State.PROGRAM_END;
+						finish = true;
 					}
 					return newToken(content);
 					

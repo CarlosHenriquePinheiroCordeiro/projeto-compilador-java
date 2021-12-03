@@ -4,21 +4,17 @@
  *
  */
 public class SyntaxException {
-
-	public static void invalidProgram(Token token, int line) {
-		throw new RuntimeException(getError()+"Program definition ('program') expected at the document beginning. \'"+token.getContent()+"\' ("+TokenType.type[token.getType()]+") given."+getLine(line));
-	}
-	
-	public static void invalidBegin(Token token, int line) {
-		throw new RuntimeException(getError()+"Initial symbol ('begin') expected at the code beginning. \'"+token.getContent()+"\' ("+TokenType.type[token.getType()]+") given."+getLine(line));
-	}
-	
-	public static void invalidEnd(Token token, int line) {
-		throw new RuntimeException(getError()+"Expected end token ('end'). \'"+token.getContent()+"\' ("+TokenType.type[token.getType()]+") given."+getLine(line));
-	}
 	
 	public static void invalidTerm(Token token, int line) {
-		throw new RuntimeException(getError()+"Expected var or number. ("+TokenType.type[token.getType()]+") given."+getLine(line));
+		throw new RuntimeException(getError()+"Expected var or number. \'"+token.getContent()+"\'("+TokenType.type[token.getType()]+") given."+getLine(line));
+	}
+	
+	public static void invalidOperator(Token token, int line) {
+		throw new RuntimeException(getError()+"Expected id or keyword. \'"+token.getContent()+"\'("+TokenType.type[token.getType()]+") given."+getLine(line));
+	}
+	
+	public static void invalidPunctuation(Token token, int line) {
+		throw new RuntimeException(getError()+"Expected ';'. \'"+token.getContent()+"\'("+TokenType.type[token.getType()]+") given."+getLine(line));
 	}
 	
 	private static String getError() {
