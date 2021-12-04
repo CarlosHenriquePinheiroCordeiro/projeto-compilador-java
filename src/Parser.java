@@ -46,7 +46,7 @@ public class Parser {
 	}
 	
 	/**
-	 * Representando o 'term', define o termo de uma expressão, sendo uma variável ou um número
+	 * Representando o 'term', define o termo de uma expressão, sendo uma variável, um número ou uma palavra chave
 	 */
 	public void term() {
 		Token token = nextToken();
@@ -76,7 +76,7 @@ public class Parser {
 	}
 	
 	/**
-	 * Retorna se o token é um termo, sendo este uma variável, um número ou uma literal
+	 * Retorna se o token é um termo, sendo este uma palavra chave, variável, um número ou uma literal
 	 * @param token
 	 * @return
 	 */
