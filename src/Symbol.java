@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Classe responsável por representar cada símbolo identificado pelo compilador
  * @author Carlos Henrique Pinheiro Cordeiro
@@ -5,27 +8,19 @@
  */
 public class Symbol {
 
-	private String  content;
-	private String  name;
-	private byte    type;
-	private int     scope;
-	private int     bits;
-	private int     lines;
-	private boolean used;
+	private String    	  name;
+	private byte      	  type;
+	private int           bits;
+	private List<Integer> lines = new ArrayList<Integer>();
+	private boolean  	  used;
 	
-	public Symbol() {
-		
+	public Symbol(String name, byte type) {
+		setName(name);
+		setType(type);
+		setBits();
 	}
-	
-	public String getContent() {
-		return content;
-	}
-	
-	public void setContent(String content) {
-		this.content = content;
-	}
-	
-	public String getName() {
+
+	public String getName(String name) {
 		return name;
 	}
 	
@@ -41,28 +36,17 @@ public class Symbol {
 		this.type = type;
 	}
 	
-	public int getScope() {
-		return scope;
-	}
-	
-	public void setScope(int scope) {
-		this.scope = scope;
-	}
-	
 	public int getBits() {
 		return bits;
 	}
 	
-	public void setBits(int bits) {
+	public void setBits() {
+		int bits = 0;
 		this.bits = bits;
 	}
 	
-	public int getLines() {
+	public List<Integer> getLines() {
 		return lines;
-	}
-	
-	public void setLines(int lines) {
-		this.lines = lines;
 	}
 	
 	public boolean isUsed() {

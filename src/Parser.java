@@ -11,6 +11,11 @@ public class Parser {
 	private Lexical lex;
 	
 	/**
+	 * Tabela de símbolos
+	 */
+	private SymbolTable symbolTable = new SymbolTable();
+	
+	/**
 	 * Construtor que inicia a análise sintática
 	 * @param lex
 	 */
@@ -34,6 +39,7 @@ public class Parser {
 		if (!isTerm(token)) {
 			SyntaxException.invalidTerm(token, getLex().getLine());
 		}
+		verifyScope(token);
 		expression();
 	}
 	
@@ -73,6 +79,58 @@ public class Parser {
 			}
 			term();
 		}
+	}
+	
+	
+	public void verifySymbol(Token token) {
+		
+	}
+
+	/**
+	 * Verifica o escopo atual do programa, informando-o para a tabela de símbolos
+	 * @param token
+	 */
+	public void verifyScope(Token token) {
+		if (isKeyword(token)) {
+			if (isStartScope(token)) {
+				getSymbolTable().plusActualScope();
+			}
+			else if (isEndScope(token)) {
+				getSymbolTable().subtractActualScope();
+			}
+		}
+	}
+	
+	/**
+	 * Verifica se o token atual inicia um bloco de instruções (escopo)
+	 * @param token
+	 * @return
+	 */
+	public boolean isStartScope(Token token) {
+		if (isCommand(token))
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Verifica se o token atual encerra um bloco de instruções (escopo)
+	 * @param token
+	 * @return
+	 */
+	public boolean isEndScope(Token token) {
+		if (token.getContent() == "end")
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Verifica se o token é um comando em específico
+	 * @param token
+	 * @return
+	 */
+	public boolean isCommand(Token token) {
+		return token.getContent() == "if" || token.getContent() == "else" || token.getContent() == "while" ||
+			   token.getContent() == "do" || token.getContent() == "for"  || token.getContent() == "program";
 	}
 	
 	/**
@@ -185,6 +243,10 @@ public class Parser {
 	public void setLex(Lexical lex) {
 		this.lex = lex;
 	}
-	
-	
+
+	public SymbolTable getSymbolTable() {
+		return symbolTable;
+	}
+
+
 }
