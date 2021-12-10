@@ -21,7 +21,7 @@ public class Token {
 		this.content = content;
 	}
 
-	public int getType() {
+	public byte getType() {
 		return type;
 	}
 

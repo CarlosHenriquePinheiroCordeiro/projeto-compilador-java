@@ -1,23 +1,12 @@
 program
-	var nome = "Carlos";
-	var num3ro = 1;
-	var li_te_ral = 'ABC';
 	begin
-		for var x = 0; x < 3; x++ do
+		var escopo1 = 1;
+		for var x = 0; x < 10; x++
 		begin
-			if x == 0 then
+			var escopo2 = 2;
+			if escopo2 == 2
 			begin
-				nome += " Henrique";
-			end
-			
-			else if x == 1 then
-			begin
-				nome += " Pinheiro";
-			end
-			
-			else then
-			begin
-				nome += " Cordeiro";
+				var escopo3 = 3;
 			end
 		end
 	end

@@ -19,8 +19,12 @@ public class Symbol {
 		setType(type);
 		setBits();
 	}
+	
+	public void addLine(int line) {
+		getLines().add(line);
+	}
 
-	public String getName(String name) {
+	public String getName() {
 		return name;
 	}
 	
@@ -55,6 +59,20 @@ public class Symbol {
 	
 	public void setUsed(boolean used) {
 		this.used = used;
+	}
+
+	@Override
+	public String toString() {
+		return "Symbol [nome=" + name + ", tipo=" + type + ", bits=" + bits + ", lines=" + lines + ", used=" + used
+				+ "]";
+	}
+	
+	public String printLines() {
+		String lines = "";
+		for (int line : getLines()) {
+			lines += " "+line;
+		}
+		return lines;
 	}
 	
 	

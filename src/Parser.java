@@ -22,6 +22,7 @@ public class Parser {
 	public Parser(Lexical lex) {
 		setLex(lex);
 		parse();
+		System.out.println(getSymbolTable());
 	}
 	
 	/**
@@ -37,9 +38,8 @@ public class Parser {
 	public void start() {
 		Token token = nextToken();
 		if (!isTerm(token)) {
-			SyntaxException.invalidTerm(token, getLex().getLine());
+			SyntaxException.invalidTerm(token, getLine());
 		}
-		verifyScope(token);
 		expression();
 	}
 	
@@ -73,7 +73,7 @@ public class Parser {
 			if (isOperator(token)) {
 				token = nextToken();
 				if (isOperator(token)) {
-					SyntaxException.invalidTerm(token, getLex().getLine());
+					SyntaxException.invalidTerm(token, getLine());
 				}
 				expressionI();
 			}
@@ -81,11 +81,21 @@ public class Parser {
 		}
 	}
 	
-	
-	public void verifySymbol(Token token) {
-		
+	/**
+	 * Retorna o próximo token vindo da análise léxica para a análise sintática
+	 * @param token
+	 * @return
+	 */
+	public Token nextToken() {
+		if (getLex().isFinish()) {
+			return null;
+		}
+		Token token = getLex().newToken();
+		verifyScope(token);
+		verifySymbol(token);
+		return getLex().newToken();
 	}
-
+	
 	/**
 	 * Verifica o escopo atual do programa, informando-o para a tabela de símbolos
 	 * @param token
@@ -98,6 +108,16 @@ public class Parser {
 			else if (isEndScope(token)) {
 				getSymbolTable().subtractActualScope();
 			}
+		}
+	}
+	
+	/**
+	 * Verifica se a variável se encaixa como um símbolo, se for o caso, a tabela de símbolos o adotará com as devidas tratativas
+	 * @param token
+	 */
+	public void verifySymbol(Token token) {
+		if (token.getType() == TokenType.VAR) {
+			getSymbolTable().newSymbol(token, getLine());
 		}
 	}
 	
@@ -217,23 +237,19 @@ public class Parser {
 	}
 	
 	/**
-	 * Retorna o próximo token vindo da análise léxica para a análise sintática
-	 * @param token
-	 * @return
-	 */
-	public Token nextToken() {
-		if (getLex().isFinish()) {
-			return null;
-		}
-		return getLex().newToken();
-	}
-	
-	/**
 	 * Retorna a análise léxica para o parser
 	 * @return
 	 */
 	public Lexical getLex() {
 		return lex;
+	}
+	
+	/**
+	 * Retorna a linha atual do programa
+	 * @return
+	 */
+	public int getLine() {
+		return getLex().getLine();
 	}
 
 	/**
