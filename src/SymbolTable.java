@@ -22,12 +22,12 @@ public class SymbolTable {
 	private int actualScope = 0;
 
 	/**
-	 * Traz um novo símbolo para a tabela de símbolos
+	 * Traz um novo símbolo para a tabela de símbolos se este já não existir
 	 * @param token
 	 */
 	public void newSymbol(Token token, int line) {
 		if (!symbolExists(token, line)) {
-			Symbol symbol = new Symbol(token.getContent(), token.getType());
+			Symbol symbol = new Symbol(token.getContent(), token.getType(), line);
 			getSymbolTable().get(getActualScope() - 1).add(symbol);
 		}
 	}

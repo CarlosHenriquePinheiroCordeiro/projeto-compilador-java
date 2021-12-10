@@ -4,13 +4,14 @@ program
 		inteiro++;
 		for var x = 0; x < 10; x++
 		begin
+			var escopo1 = 0;
 			escopo1++;
 			var nome = "Carlos";
 			if escopo2 == 2
 			begin
 				var escopo3 = 3.14;
 			end
-			var e = escopo1;
+			var euler = 0.5772156649;
 		end
 	end
 	

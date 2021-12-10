@@ -24,19 +24,31 @@ public class Symbol {
 	private int bits;
 	
 	/**
+	 * Valor da variável
+	 */
+	private String value;
+	
+	/**
 	 * Linhas que a variável é utilizada no programa
 	 */
 	private List<Integer> lines = new ArrayList<Integer>();
+	
+	/**
+	 * Linha onde o símbolo foi declarado
+	 */
+	private int declarationLine = 0;
 	
 	/**
 	 * Simboliza se a variável foi utilizada ou não
 	 */
 	private boolean used;
 	
-	public Symbol(String name, byte type) {
+	public Symbol(String name, byte type, int line) {
 		setName(name);
 		setType(type);
-		setBits();
+		setDeclarationLine(line);
+		//setValue(name);
+		//setBits();
 	}
 	
 	public void addLine(int line) {
@@ -72,6 +84,14 @@ public class Symbol {
 		return lines;
 	}
 	
+	public int getDeclarationLine() {
+		return declarationLine;
+	}
+
+	public void setDeclarationLine(int declarationLine) {
+		this.declarationLine = declarationLine;
+	}
+
 	public boolean isUsed() {
 		return used;
 	}
@@ -80,9 +100,17 @@ public class Symbol {
 		this.used = used;
 	}
 
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
 	@Override
 	public String toString() {
-		return "Symbol [nome=" + name + ", tipo=" + type + ", bits=" + bits + ", inLines=" + printLines() + ", used=" + used;
+		return "Symbol [nome=" + name + ", tipo=" + TokenType.type[type] + ", bits=" + bits + ", declarationLine="+getDeclarationLine()+", inLines=" + printLines() + ", used=" + used;
 	}
 	
 	/**
