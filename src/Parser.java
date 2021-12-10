@@ -90,10 +90,10 @@ public class Parser {
 		if (getLex().isFinish()) {
 			return null;
 		}
-		Token token = getLex().newToken();
+		Token token = getLex().nextToken();
 		verifyScope(token);
 		verifySymbol(token);
-		return getLex().newToken();
+		return token;
 	}
 	
 	/**
@@ -138,7 +138,7 @@ public class Parser {
 	 * @return
 	 */
 	public boolean isEndScope(Token token) {
-		if (token.getContent() == "end")
+		if (token.getContent().equals("end"))
 			return true;
 		return false;
 	}
@@ -149,8 +149,8 @@ public class Parser {
 	 * @return
 	 */
 	public boolean isCommand(Token token) {
-		return token.getContent() == "if" || token.getContent() == "else" || token.getContent() == "while" ||
-			   token.getContent() == "do" || token.getContent() == "for"  || token.getContent() == "program";
+		return token.getContent().equals("if") || token.getContent().equals("else") || token.getContent().equals("while") ||
+			   token.getContent().equals("do") || token.getContent().equals("for")  || token.getContent().equals("program");
 	}
 	
 	/**

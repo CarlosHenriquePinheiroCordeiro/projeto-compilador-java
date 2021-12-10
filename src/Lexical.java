@@ -44,7 +44,7 @@ public class Lexical {
 	 */
 	public List<Token> analisys() {
 		do {
-			tokens.add(newToken());
+			tokens.add(nextToken());
 		} while (!isProgramEnd()); //Equanto ainda houver caracteres para serem lidos
 		return tokens;
 	}
@@ -53,7 +53,7 @@ public class Lexical {
 	 * Realiza a análise léxica de um novo token, percorrendo todos os tokens do programa analisado a cada chamada deste método
 	 * @return novo token corretamente analisado
 	 */
-	public Token newToken() {
+	public Token nextToken() {
 		String content = "";
 		state 		   = State.INITIAL;
 		tokenType 	   = TokenType.UNDEFINED;

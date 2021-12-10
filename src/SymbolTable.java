@@ -55,8 +55,9 @@ public class SymbolTable {
 	public boolean symbolExists(Token token, int line) {
 		for (List<Symbol> scope : getSymbolTable()) {
 			for (Symbol symbol : scope) {
-				if (symbol.getName() == token.getContent()) {
+				if (symbol.getName().equals(token.getContent())) {
 					symbol.addLine(line);
+					symbol.setUsed(true);
 					return true;
 				}
 			}
@@ -118,7 +119,7 @@ public class SymbolTable {
 
 	@Override
 	public String toString() {
-		return "SymbolTable [ "+printSymbols()+" ]";
+		return "SymbolTable [ \n"+printSymbols()+" \n]";
 	}
 	
 	/**
@@ -127,9 +128,9 @@ public class SymbolTable {
 	 */
 	public String printSymbols() {
 		String symbols = "";
-		for (int scope = 1; scope <= getSymbolTable().size(); scope++) {
+		for (int scope = 0; scope < getSymbolTable().size(); scope++) {
 			for (Symbol symbol : (List<Symbol>)getSymbolTable().get(scope)) {
-				symbols += symbol.toString();
+				symbols += symbol.toString()+", scope="+(scope + 1)+"]\n";
 			}
 		}
 		return symbols;

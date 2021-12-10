@@ -63,11 +63,17 @@ public class Symbol {
 
 	@Override
 	public String toString() {
-		return "Symbol [nome=" + name + ", tipo=" + type + ", bits=" + bits + ", lines=" + lines + ", used=" + used
-				+ "]";
+		return "Symbol [nome=" + name + ", tipo=" + type + ", bits=" + bits + ", inLines=" + printLines() + ", used=" + used;
 	}
 	
+	/**
+	 * Retorna as linhas que o símbolo é utilizado
+	 * @return
+	 */
 	public String printLines() {
+		if (getLines().isEmpty()) {
+			return "none";
+		}
 		String lines = "";
 		for (int line : getLines()) {
 			lines += " "+line;

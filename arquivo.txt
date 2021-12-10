@@ -1,8 +1,10 @@
 program
 	begin
 		var escopo1 = 1;
+		escopo1++;
 		for var x = 0; x < 10; x++
 		begin
+			escopo1++;
 			var escopo2 = 2;
 			if escopo2 == 2
 			begin
