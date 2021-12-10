@@ -8,7 +8,20 @@ import java.util.List;
  */
 public class Lexical {
 	
+	/**
+	 * Todos os caracteres do programa
+	 */
 	private char[] code;
+	
+	/**
+	 * Listas de:
+	 * -Palavras chave
+	 * -Operadores matemáticos
+	 * -Operadores de atribuição
+	 * -Operadores lógicos
+	 * -Operadores unários
+	 * -Tokens
+	 */
 	private List<String> keyWords  	   = new ArrayList<String>();
 	private List<String> mathOperators = new ArrayList<String>();
 	private List<String> assOperators  = new ArrayList<String>();
@@ -17,13 +30,40 @@ public class Lexical {
 	private List<String> punOperators  = new ArrayList<String>();
 	private List<Token>  tokens 	   = new ArrayList<Token>();
 	
-	private int     position  = 0;
-	private int     line 	  = 1;
-	private int     sQuotes   = 0;
-	private int     dQuotes   = 0;
-	private int     state 	  = State.INITIAL;
-	private byte    tokenType = TokenType.UNDEFINED;
-	private boolean finish 	  = false;
+	/**
+	 * Posição do programa na leitura de caracteres, servindo para indicar em qual caractere o programa se encontra
+	 */
+	private int position = 0;
+	
+	/**
+	 * Linha atual do programa
+	 */
+	private int line = 1;
+	
+	/**
+	 * Quantidade de aspas simples
+	 */
+	private int sQuotes = 0;
+	
+	/**
+	 * Quantidade de aspas duplas
+	 */
+	private int dQuotes = 0;
+	
+	/**
+	 * Estado atual do analisador léxico
+	 */
+	private int state = State.INITIAL;
+	
+	/**
+	 * Tipo atual do token a ser definido pelo analisador léxico
+	 */
+	private byte tokenType = TokenType.UNDEFINED;
+	
+	/**
+	 * Indica se o programa chegou ao fim, ou seja, não há mais caracteres para ler
+	 */
+	private boolean finish  = false;
 	
 	/**
 	 * Construtor que instancia as palavras chave e operadores para a análise léxica
@@ -545,6 +585,6 @@ public class Lexical {
 	public List<String> getPunOperators() {
 		return this.punOperators;
 	}
-	
-	
+
+
 }

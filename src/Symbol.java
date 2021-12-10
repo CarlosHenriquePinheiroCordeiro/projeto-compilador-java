@@ -8,11 +8,30 @@ import java.util.List;
  */
 public class Symbol {
 
-	private String    	  name;
-	private byte      	  type;
-	private int           bits;
+	/**
+	 * Nome da variável
+	 */
+	private String name;
+	
+	/**
+	 * Tipo da variável
+	 */
+	private byte type;
+	
+	/**
+	 * Quantidade de bits alocados na memória
+	 */
+	private int bits;
+	
+	/**
+	 * Linhas que a variável é utilizada no programa
+	 */
 	private List<Integer> lines = new ArrayList<Integer>();
-	private boolean  	  used;
+	
+	/**
+	 * Simboliza se a variável foi utilizada ou não
+	 */
+	private boolean used;
 	
 	public Symbol(String name, byte type) {
 		setName(name);

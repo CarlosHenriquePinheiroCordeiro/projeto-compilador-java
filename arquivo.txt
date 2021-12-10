@@ -1,15 +1,16 @@
 program
 	begin
-		var escopo1 = 1;
-		escopo1++;
+		var inteiro = 1;
+		inteiro++;
 		for var x = 0; x < 10; x++
 		begin
 			escopo1++;
-			var escopo2 = 2;
+			var nome = "Carlos";
 			if escopo2 == 2
 			begin
-				var escopo3 = 3;
+				var escopo3 = 3.14;
 			end
+			var e = escopo1;
 		end
 	end
 	

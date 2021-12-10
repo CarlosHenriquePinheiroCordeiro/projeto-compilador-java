@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SymbolTable {
-	
+
 	/**
 	 * Tabela de símbolos, funcionando como um conjunto de Lists que comportarão os símbolos.
 	 * Cada um destes Lists representa um escopo, ou seja, variáveis que estão no escopo 1 
@@ -10,17 +10,17 @@ public class SymbolTable {
 	 * e assim por diante
 	 */
 	private List<List> symbolTable = new ArrayList<List>();
-	
+
 	/**
 	 * Total de escopos do programa
 	 */
 	private int scopes = 0;
-	
+
 	/**
 	 * Escopo atual do programa
 	 */
 	private int actualScope = 0;
-	
+
 	/**
 	 * Traz um novo símbolo para a tabela de símbolos
 	 * @param token
@@ -31,7 +31,7 @@ public class SymbolTable {
 			getSymbolTable().get(getActualScope() - 1).add(symbol);
 		}
 	}
-	
+
 	/**
 	 * Aumenta o valor do escopo atual do programa, auxiliando nas definições de escopo das variáveis
 	 */
@@ -39,14 +39,14 @@ public class SymbolTable {
 		this.actualScope++;
 		verifyScope();
 	}
-	
+
 	/**
 	 * Diminui o valor do escopo atual do programa, auxiliando nas definições de escopo das variáveis
 	 */
 	public void subtractActualScope() {
 		this.actualScope--;
 	}
-	
+
 	/**
 	 * Verifica se o Token que viraria um símbolo já não se encontra como um na tabela de símbolos
 	 * @param token
@@ -64,7 +64,7 @@ public class SymbolTable {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Verifica e atende ao total de escopos do programa
 	 */
@@ -73,7 +73,7 @@ public class SymbolTable {
 			setScopes(getActualScope());
 		}
 	}
-	
+
 	/**
 	 * Retorna a tabela de símbolos
 	 * @return
@@ -81,7 +81,7 @@ public class SymbolTable {
 	public List<List> getSymbolTable() {
 		return symbolTable;
 	}
-	
+
 	/**
 	 * Retorna o total de escopos do programa
 	 * @return
@@ -89,7 +89,7 @@ public class SymbolTable {
 	public int getScopes() {
 		return scopes;
 	}
-	
+
 	/**
 	 * Definição dos escopos totais da tabela de símbolos
 	 * @param scopes
@@ -100,7 +100,7 @@ public class SymbolTable {
 			getSymbolTable().add(new ArrayList<Symbol>());
 		}
 	}
-	
+
 	/**
 	 * Retorna o escopo atual do programa
 	 * @return
@@ -108,7 +108,7 @@ public class SymbolTable {
 	public int getActualScope() {
 		return actualScope;
 	}
-	
+
 	/**
 	 * Define o escopo atual do programa
 	 * @param actualScope
@@ -121,7 +121,7 @@ public class SymbolTable {
 	public String toString() {
 		return "SymbolTable [ \n"+printSymbols()+" \n]";
 	}
-	
+
 	/**
 	 * Retorna a String dos símbolos da tabela para a exibição
 	 * @return
@@ -135,7 +135,6 @@ public class SymbolTable {
 		}
 		return symbols;
 	}
-	
-	
-	
+
+
 }

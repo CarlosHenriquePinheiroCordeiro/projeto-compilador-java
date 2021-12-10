@@ -5,6 +5,21 @@
  */
 public class TokenType {
 	
+	/**
+	 * Tipo do token:
+	 * -Número inteiro
+	 * -Número real
+	 * -Literal
+	 * -Variável
+	 * -Palavra chave
+	 * -Operador genérico
+	 * -Operador de atribuição
+	 * -Operador matemático
+	 * -Operador lógico
+	 * -Operador unário
+	 * -Pontuação
+	 * -Indefinido
+	 */
 	public static final byte INTEGER      = 0;
 	public static final byte REAL         = 1;
 	public static final byte LITERAL      = 2;

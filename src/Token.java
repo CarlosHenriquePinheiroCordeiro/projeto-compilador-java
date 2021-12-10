@@ -1,12 +1,19 @@
 /**
- * Token do compilador
+ * Classe que define o Token do compilador
  * @author Carlos Henrique Pinheiro Cordeiro
  *
  */
 public class Token {
 
+	/**
+	 * Conteúdo/Nome do token
+	 */
 	private String content;
-	private byte    type;
+	
+	/**
+	 * Tipo do token
+	 */
+	private byte type;
 	
 	public Token(String content, byte type) {
 		setContent(content);
