@@ -10,7 +10,17 @@ public class SymbolTable {
 	 * e assim por diante
 	 */
 	private List<List> symbolTable = new ArrayList<List>();
+	
+	/**
+	 * Expressão atual para atribuição de valor para símbolo
+	 */
+	private List<String> expression = new ArrayList<String>();
 
+	/**
+	 * Símbolo atual em evidência para atribuições
+	 */
+	private Symbol actualSymbol = null;
+	
 	/**
 	 * Total de escopos do programa
 	 */
@@ -29,6 +39,7 @@ public class SymbolTable {
 		if (!symbolExists(token, line)) {
 			Symbol symbol = new Symbol(token.getContent(), token.getType(), line);
 			getSymbolTable().get(getActualScope() - 1).add(symbol);
+			setActualSymbol(symbol);
 		}
 	}
 
@@ -56,6 +67,7 @@ public class SymbolTable {
 		for (List<Symbol> scope : getSymbolTable()) {
 			for (Symbol symbol : scope) {
 				if (symbol.getName().equals(token.getContent())) {
+					setActualSymbol(symbol);
 					symbol.addLine(line);
 					symbol.setUsed(true);
 					return true;
@@ -73,6 +85,21 @@ public class SymbolTable {
 			setScopes(getActualScope());
 		}
 	}
+	
+	/**
+	 * Adiciona um item à expressão de atribuição atual
+	 * @param expressionItem
+	 */
+	public void addToExpression(String expressionItem) {
+		getExpression().add(expressionItem);
+	}
+	
+	/**
+	 * Encerra a expressão
+	 */
+	public void finishExpression() {
+		getExpression().clear();
+	}
 
 	/**
 	 * Retorna a tabela de símbolos
@@ -80,6 +107,30 @@ public class SymbolTable {
 	 */
 	public List<List> getSymbolTable() {
 		return symbolTable;
+	}
+
+	/**
+	 * Retorna a expressão de atribuição
+	 * @return
+	 */
+	public List<String> getExpression() {
+		return expression;
+	}
+
+	/**
+	 * Retorna o símbolo atual em evidência para expressões de atribuição
+	 * @return
+	 */
+	public Symbol getActualSymbol() {
+		return actualSymbol;
+	}
+
+	/**
+	 * Define o símbolo atual em evidência para expressões de atribuição
+	 * @param actualSymbol
+	 */
+	public void setActualSymbol(Symbol actualSymbol) {
+		this.actualSymbol = actualSymbol;
 	}
 
 	/**

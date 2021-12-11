@@ -16,6 +16,16 @@ public class Parser {
 	private SymbolTable symbolTable = new SymbolTable();
 	
 	/**
+	 * Mostra se o Parser identificou uma variável, útil para atribuição de valores
+	 */
+	private boolean foundVar = false;
+	
+	/**
+	 * Mostra se o Parser está identificando uma expressão de atribuição para uma variável
+	 */
+	private boolean attExpression = false;
+	
+	/**
 	 * Construtor que inicia a análise sintática
 	 * @param lex
 	 */
@@ -93,6 +103,8 @@ public class Parser {
 		Token token = getLex().nextToken();
 		verifyScope(token);
 		verifySymbol(token);
+		verifyExpression(token);
+		buildExpression(token);
 		return token;
 	}
 	
@@ -118,6 +130,31 @@ public class Parser {
 	public void verifySymbol(Token token) {
 		if (token.getType() == TokenType.VAR) {
 			getSymbolTable().newSymbol(token, getLine());
+			setFoundVar(true);
+		}
+	}
+	
+	/**
+	 * Verifica se o parser encontrou o início de uma expressão de atribuição
+	 * @param token
+	 */
+	public void verifyExpression(Token token) {
+		if (isFoundVar() && isOperator(token)) {
+			setAttExpression(true);
+		}
+	    if (isAttExpression() && isPunctuation(token)) {
+			setAttExpression(false);
+			getSymbolTable().finishExpression();
+		}
+	}
+	
+	/**
+	 * Se for o caso, adiciona os tokens à expressão de atribuição
+	 * @param token
+	 */
+	public void buildExpression(Token token) {
+		if (isAttExpression()) {
+			getSymbolTable().addToExpression(token.getContent());
 		}
 	}
 	
@@ -260,8 +297,52 @@ public class Parser {
 		this.lex = lex;
 	}
 
+	/**
+	 * Retorna a classe responsável pela tabela de símbolos
+	 * @return
+	 */
 	public SymbolTable getSymbolTable() {
 		return symbolTable;
+	}
+	
+	/**
+	 * Define a classe estrutura da tabela de símbolos
+	 * @param symbolTable
+	 */
+	public void setSymbolTable(SymbolTable symbolTable) {
+		this.symbolTable = symbolTable;
+	}
+
+	/**
+	 * Retorna se o Parser encontrou uma variável
+	 * @return
+	 */
+	public boolean isFoundVar() {
+		return foundVar;
+	}
+
+	/**
+	 * Define se o Parser encontrou uma variável
+	 * @param isVar
+	 */
+	public void setFoundVar(boolean foundVar) {
+		this.foundVar = foundVar;
+	}
+
+	/**
+	 * Retorna se o Parser está identificando uma expressão de atribuição
+	 * @return
+	 */
+	public boolean isAttExpression() {
+		return attExpression;
+	}
+
+	/**
+	 * Define se o Parser está ou não identificando uma expressão de atribuição
+	 * @return
+	 */
+	public void setAttExpression(boolean attExpression) {
+		this.attExpression = attExpression;
 	}
 
 
