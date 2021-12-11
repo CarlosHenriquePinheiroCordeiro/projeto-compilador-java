@@ -1,3 +1,5 @@
+import javax.script.ScriptException;
+
 /**
  * Analisador Sintático (Parser) do compilador
  * @author Carlos Henrique Pinheiro Cordeiro
@@ -29,7 +31,7 @@ public class Parser {
 	 * Construtor que inicia a análise sintática
 	 * @param lex
 	 */
-	public Parser(Lexical lex) {
+	public Parser(Lexical lex) throws ScriptException {
 		setLex(lex);
 		parse();
 		System.out.println(getSymbolTable());
@@ -38,14 +40,14 @@ public class Parser {
 	/**
 	 * Início da análise sintática
 	 */
-	public void parse() {
+	public void parse() throws ScriptException {
 		start();
 	}
 	
 	/**
 	 * Representa o ponto de partida do programa, devendo começar com um termo
 	 */
-	public void start() {
+	public void start() throws ScriptException {
 		Token token = nextToken();
 		if (!isTerm(token)) {
 			SyntaxException.invalidTerm(token, getLine());
@@ -56,7 +58,7 @@ public class Parser {
 	/**
 	 * Representando o 'expression', define a base de uma expressão do programa
 	 */
-	public void expression() {
+	public void expression() throws ScriptException {
 		term();
 		expressionI();
 	}
@@ -64,7 +66,7 @@ public class Parser {
 	/**
 	 * Representando o 'term', define o termo de uma expressão, sendo uma variável, um número ou uma palavra chave
 	 */
-	public void term() {
+	public void term() throws ScriptException {
 		Token token = nextToken();
 		if (!isFinish(token)) {
 			if (!isPunctuation(token)) {
@@ -77,7 +79,7 @@ public class Parser {
 	 * Representando o 'expressionI', analisa e monta a expressão como um todo para o programa, 
 	 * de forma recursiva, continuando ou não a expressão
 	 */
-	public void expressionI() {
+	public void expressionI() throws ScriptException {
 		Token token = nextToken();
 		if (!isFinish(token)) {
 			if (isOperator(token)) {
@@ -95,12 +97,14 @@ public class Parser {
 	 * Retorna o próximo token vindo da análise léxica para a análise sintática
 	 * @param token
 	 * @return
+	 * @throws ScriptException 
 	 */
-	public Token nextToken() {
+	public Token nextToken() throws ScriptException {
 		if (getLex().isFinish()) {
 			return null;
 		}
 		Token token = getLex().nextToken();
+		String debug = token.getContent();
 		verifyExpression(token);
 		buildExpression(token);
 		verifyScope(token);
@@ -124,21 +128,11 @@ public class Parser {
 	}
 	
 	/**
-	 * Verifica se a variável se encaixa como um símbolo, se for o caso, a tabela de símbolos o adotará com as devidas tratativas
-	 * @param token
-	 */
-	public void verifySymbol(Token token) {
-		if (token.getType() == TokenType.VAR) {
-			getSymbolTable().newSymbol(token, getLine());
-			setFoundVar(true);
-		}
-	}
-	
-	/**
 	 * Verifica se o parser encontrou o início de uma expressão de atribuição
 	 * @param token
+	 * @throws ScriptException 
 	 */
-	public void verifyExpression(Token token) {
+	public void verifyExpression(Token token) throws ScriptException {
 		if (isFoundVar() && isAssOperator(token)) {
 			setAssExpression(true);
 		}
@@ -150,11 +144,22 @@ public class Parser {
 	}
 	
 	/**
+	 * Verifica se a variável se encaixa como um símbolo, se for o caso, a tabela de símbolos o adotará com as devidas tratativas
+	 * @param token
+	 */
+	public void verifySymbol(Token token) {
+		if (token.getType() == TokenType.VAR) {
+			getSymbolTable().newSymbol(token, getLine());
+			setFoundVar(true);
+		}
+	}
+	
+	/**
 	 * Se for o caso, adiciona os tokens à expressão de atribuição
 	 * @param token
 	 */
 	public void buildExpression(Token token) {
-		if (isAssExpression()) {
+		if (isAssExpression() && !isAssOperator(token)) {
 			getSymbolTable().addToExpression(token);
 		}
 	}
@@ -287,7 +292,7 @@ public class Parser {
 	 * @return
 	 */
 	public boolean isLiteral(Token token) {
-		return token.getType() == TokenType.LITERAL;
+		return token.getType() == TokenType.STRING;
 	}
 	
 	/**

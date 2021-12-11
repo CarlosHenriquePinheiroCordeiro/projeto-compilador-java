@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import javax.script.*;
 
 public class SymbolTable {
 
@@ -36,8 +37,8 @@ public class SymbolTable {
 	 * @param token
 	 */
 	public void newSymbol(Token token, int line) {
-		if (!symbolExists(token, line)) {
-			Symbol symbol = new Symbol(token.getContent(), token.getType(), line);
+		if (!symbolExists(token)) {
+			Symbol symbol = new Symbol(token.getContent(), line);
 			getSymbolTable().get(getActualScope() - 1).add(symbol);
 			setActualSymbol(symbol);
 		}
@@ -84,7 +85,7 @@ public class SymbolTable {
 	 * @param token
 	 * @return
 	 */
-	public boolean symbolExists(Token token, int line) {
+	public boolean symbolExists(Token token) {
 		for (List<Symbol> scope : getSymbolTable()) {
 			for (Symbol symbol : scope) {
 				if (symbol.getName().equals(token.getContent())) {
@@ -114,37 +115,62 @@ public class SymbolTable {
 	
 	/**
 	 * Encerra a expressão atual, atribuindo valor ao símbolo atual
+	 * @throws ScriptException 
 	 */
-	public void finishExpression() {
-		getSymbol(getActualSymbol().getName()).setValue(buildValueFromExpression());
+	public void finishExpression() throws ScriptException {
+		String value = (String)buildValueFromExpression();
+		getSymbol(getActualSymbol().getName()).setValue(value);
+		getSymbol(getActualSymbol().getName()).setType (verifyType());
 		getExpression().clear();
+	}
+	
+	/**
+	 * Verifica o tipo do símbolo a partir do seu valor
+	 * @param value
+	 * @return
+	 */
+	public byte verifyType() {
+		boolean isReal = false;
+		for (Token token : getExpression()) {
+			String value = "";
+			if (token.getType() == TokenType.VAR) {
+				value = getValueFromVar(token);
+			}
+			else {
+				value = token.getContent();
+			}
+			
+		}
+		return 1;
+	}
+	
+	/**
+	 * Verifica o valor de um símbolo a partir do nome dado à ele
+	 * @param content
+	 * @return
+	 */
+	public String getValueFromVar(Token token) {
+		if (!symbolExists(token)) {
+			throw new RuntimeException("Error: symbol "+token.getContent()+" not declared");
+		}
+		return (String)getSymbol(token.getContent()).getValue();
 	}
 	
 	/**
 	 * Retorna o valor da expressão atual, para atribuí-lo ao símbolo atual
 	 * @param <T>
 	 * @return
+	 * @throws ScriptException 
 	 */
-	public <T> T buildValueFromExpression() {
-		if (isConcatenation()) {
-			return buildValueConcatenation();
-		}
-		else {
-			return buildValue();
-		}
-	}
-	
-	/**
-	 * Constrói a expressão de atribuição de valor, para expressões com concatenações
-	 * @param <T>
-	 * @return
-	 */
-	public <T> T buildValueConcatenation() {
-		String expression= "";
+	public <T> T buildValueFromExpression() throws ScriptException {
+		String expression = "";
 		for (Token token : getExpression()) {
-			
+			expression += token.getContent();
 		}
-		return null;
+		ScriptEngineManager mgr = new ScriptEngineManager();
+	    ScriptEngine engine     = mgr.getEngineByName("JavaScript");
+	    
+		return (T)engine.eval(expression);
 	}
 	
 	/**
@@ -169,7 +195,7 @@ public class SymbolTable {
 	 */
 	public boolean isConcatenation() { 
 		for (Token token : getExpression()) {
-			if (token.getType() == TokenType.LITERAL) 
+			if (token.getType() == TokenType.STRING) 
 				return true;
 		}	
 		return false;

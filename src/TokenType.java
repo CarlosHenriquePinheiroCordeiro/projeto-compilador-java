@@ -22,7 +22,7 @@ public class TokenType {
 	 */
 	public static final byte INTEGER      = 0;
 	public static final byte REAL         = 1;
-	public static final byte LITERAL      = 2;
+	public static final byte STRING       = 2;
 	public static final byte VAR          = 3;
 	public static final byte KEYWORD      = 4;
 	public static final byte OPERATOR 	  = 5;
@@ -35,7 +35,7 @@ public class TokenType {
 	public static final String[] type 	 = {
 											"INTEGER"			 , 
 											"REAL"				 , 
-											"LITERAL"			 , 
+											"STRING"			 , 
 											"ID"				 , 
 											"KEYWORD"			 , 
 											"OPERATOR"			 ,

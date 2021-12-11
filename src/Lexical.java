@@ -215,7 +215,7 @@ public class Lexical {
 	public void takeState() {
 		if (isQuote()) {
 			state     = State.LITERAL;
-			tokenType = TokenType.LITERAL;
+			tokenType = TokenType.STRING;
 			plusQuotes();
 			nextChar();
 		} 
@@ -254,7 +254,7 @@ public class Lexical {
 	 */
 	public boolean verifyToken(String content) {
 		switch (tokenType) {
-			case TokenType.LITERAL:
+			case TokenType.STRING:
 				verifyLiteral(content);
 				break;
 			case TokenType.VAR:

@@ -1,10 +1,5 @@
 program
 	begin
-		var real = inteiro + 3 + real;
-	
-		var inteiro = 0;
-		inteiro = 1 + 1;
-		
-		
+		var indefinida;
 	end
 	

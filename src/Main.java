@@ -7,7 +7,7 @@ import javax.script.*;
  * Instituto Federal Catarinenes (IFC) de Rio do Sul - SC
  * Bacharelado em Ciências da Computação
  * 
- * Restrições: a JDK deve ser de versão 14 para baixo.
+ * Restrições: JDK suportada até versão 14
  * 
  * @author Carlos Henrique Pinheiro Cordeiro
  *

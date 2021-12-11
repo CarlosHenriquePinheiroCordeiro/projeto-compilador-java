@@ -17,7 +17,7 @@ public class Symbol<T> {
 	/**
 	 * Tipo da variável
 	 */
-	private byte type;
+	private byte type = TokenType.UNDEFINED;
 	
 	/**
 	 * Quantidade de bits alocados na memória
@@ -44,9 +44,8 @@ public class Symbol<T> {
 	 */
 	private boolean used;
 	
-	public Symbol(String name, byte type, int line) {
+	public Symbol(String name, int line) {
 		setName(name);
-		setType(type);
 		setDeclarationLine(line);
 		//setValue(name);
 		//setBits();
@@ -111,7 +110,9 @@ public class Symbol<T> {
 
 	@Override
 	public String toString() {
-		return "Symbol [nome=" + name + ", tipo=" + TokenType.type[type] + ", bits=" + bits + ", declarationLine="+getDeclarationLine()+", inLines=" + printLines() + ", used=" + used;
+		return "Symbol [name=" + getName()    + ", type=" + TokenType.type[getType()] 
+				+ ", value="   +getValue()    + ", bits=" + getBits() + ", declarationLine="+getDeclarationLine()
+				+", inLines="  + printLines() + ", used=" + isUsed();
 	}
 	
 	/**

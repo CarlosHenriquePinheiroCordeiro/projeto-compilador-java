@@ -45,7 +45,7 @@ public class LexicalException {
 	 * @param line
 	 */
 	public static void invalidLiteral(String literal, int line) {
-		throw new RuntimeException("Lexical Error: Invalid literal found ("+literal+")."+getLine(line));
+		throw new RuntimeException("Lexical Error: Invalid string found ("+literal+")."+getLine(line));
 	}
 	
 	/**
