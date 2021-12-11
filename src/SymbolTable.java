@@ -30,11 +30,6 @@ public class SymbolTable {
 	 * Escopo atual do programa
 	 */
 	private int actualScope = 0;
-	
-	/**
-	 * Representa se a expressão de atribuição atual se trata de uma concatenação ou uma expressão lógica/numérica
-	 */
-	private boolean isConcatenation = false;
 
 	/**
 	 * Traz um novo símbolo para a tabela de símbolos se este já não existir
@@ -118,26 +113,66 @@ public class SymbolTable {
 	}
 	
 	/**
-	 * Encerra a expressão
+	 * Encerra a expressão atual, atribuindo valor ao símbolo atual
 	 */
 	public void finishExpression() {
-		setExpressionType();
-		getSymbol(getActualSymbol().getName()).setValue(null);
+		getSymbol(getActualSymbol().getName()).setValue(buildValueFromExpression());
 		getExpression().clear();
 	}
 	
 	/**
-	 * Define se a expressão é uma concatenação ou uma matemática/lógica
+	 * Retorna o valor da expressão atual, para atribuí-lo ao símbolo atual
+	 * @param <T>
+	 * @return
 	 */
-	public void setExpressionType() {
-		for (Token token : getExpression()) {
-			if (token.getType() == TokenType.LITERAL)
-				setConcatenation(true);
+	public <T> T buildValueFromExpression() {
+		if (isConcatenation()) {
+			return buildValueConcatenation();
+		}
+		else {
+			return buildValue();
 		}
 	}
 	
-	public <T> T buildValueExpression() {
+	/**
+	 * Constrói a expressão de atribuição de valor, para expressões com concatenações
+	 * @param <T>
+	 * @return
+	 */
+	public <T> T buildValueConcatenation() {
+		String expression= "";
+		for (Token token : getExpression()) {
+			
+		}
 		return null;
+	}
+	
+	/**
+	 * Constrói a expressão de atribuição de valor, para expressões numéricas
+	 * @param <T>
+	 * @return
+	 */
+	public <T> T buildValue() {
+		String expression= "";
+		boolean isReal = false;
+		for (Token token : getExpression()) {
+			if (token.getType() == TokenType.REAL)
+				isReal = true;
+			
+		}
+		return null;
+	}
+	
+	/**
+	 * Retorna se a expressão atual contém concatenação ou não
+	 * @return
+	 */
+	public boolean isConcatenation() { 
+		for (Token token : getExpression()) {
+			if (token.getType() == TokenType.LITERAL) 
+				return true;
+		}	
+		return false;
 	}
 
 	/**
@@ -205,22 +240,6 @@ public class SymbolTable {
 	 */
 	public void setActualScope(int actualScope) {
 		this.actualScope = actualScope;
-	}
-
-	/**
-	 * Retorna se a expressão de atribuição atual é uma concatenação ou não
-	 * @return
-	 */
-	public boolean isConcatenation() {
-		return isConcatenation;
-	}
-
-	/**
-	 * Define se a expressão de atribuição atual é uma concatenação ou não
-	 * @return
-	 */
-	public void setConcatenation(boolean isConcatenation) {
-		this.isConcatenation = isConcatenation;
 	}
 
 	@Override

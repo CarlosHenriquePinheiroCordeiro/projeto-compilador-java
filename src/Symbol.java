@@ -4,9 +4,10 @@ import java.util.List;
 /**
  * Classe responsável por representar cada símbolo identificado pelo compilador
  * @author Carlos Henrique Pinheiro Cordeiro
+ * @param <T>
  *
  */
-public class Symbol {
+public class Symbol<T> {
 
 	/**
 	 * Nome da variável
@@ -26,7 +27,7 @@ public class Symbol {
 	/**
 	 * Valor da variável
 	 */
-	private String value;
+	private T value;
 	
 	/**
 	 * Linhas que a variável é utilizada no programa
@@ -100,11 +101,11 @@ public class Symbol {
 		this.used = used;
 	}
 
-	public String getValue() {
+	public T getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(T value) {
 		this.value = value;
 	}
 

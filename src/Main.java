@@ -1,9 +1,20 @@
 import java.util.List;
 import java.util.Scanner;
+import javax.script.*;
 
+/**
+ * Projeto de Compilador para trabalho de componente curricular Compiladores I
+ * Instituto Federal Catarinenes (IFC) de Rio do Sul - SC
+ * Bacharelado em Ciências da Computação
+ * 
+ * Restrições: a JDK deve ser de versão 14 para baixo.
+ * 
+ * @author Carlos Henrique Pinheiro Cordeiro
+ *
+ */
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ScriptException {		
 		/*System.out.println("Digite:");
 		System.out.println("1 - Análise Léxica e exibição dos Tokens.");
 		System.out.println("2 - Análise Sintática + Análise Léxica sem exibição dos tokens.");
