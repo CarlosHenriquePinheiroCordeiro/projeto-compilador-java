@@ -451,7 +451,7 @@ public class Lexical {
 	 * @return
 	 */
 	public boolean isPunctuationChar() {
-		return code[position] == ';';
+		return code[position] == ';' || code[position] == '(' || code[position] == ')';
 	}
 	
 	/**
@@ -580,6 +580,8 @@ public class Lexical {
 	 */
 	public void setPunOperators() {
 		this.punOperators.add(";");
+		this.punOperators.add("(");
+		this.punOperators.add(")");
 	}
 
 	public List<String> getPunOperators() {

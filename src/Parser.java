@@ -21,9 +21,9 @@ public class Parser {
 	private boolean foundVar = false;
 	
 	/**
-	 * Mostra se o Parser está identificando uma expressão de atribuição para uma variável
+	 * Mostra se o Parser está identificando uma expressão de atribuição (assignment) para uma variável
 	 */
-	private boolean attExpression = false;
+	private boolean assExpression = false;
 	
 	/**
 	 * Construtor que inicia a análise sintática
@@ -101,10 +101,10 @@ public class Parser {
 			return null;
 		}
 		Token token = getLex().nextToken();
-		verifyScope(token);
-		verifySymbol(token);
 		verifyExpression(token);
 		buildExpression(token);
+		verifyScope(token);
+		verifySymbol(token);
 		return token;
 	}
 	
@@ -139,11 +139,12 @@ public class Parser {
 	 * @param token
 	 */
 	public void verifyExpression(Token token) {
-		if (isFoundVar() && isOperator(token)) {
-			setAttExpression(true);
+		if (isFoundVar() && isAssOperator(token)) {
+			setAssExpression(true);
 		}
-	    if (isAttExpression() && isPunctuation(token)) {
-			setAttExpression(false);
+	    if (isPunctuation(token) && token.getContent().equals(";")) {
+	    	setFoundVar(false);
+			setAssExpression(false);
 			getSymbolTable().finishExpression();
 		}
 	}
@@ -153,8 +154,8 @@ public class Parser {
 	 * @param token
 	 */
 	public void buildExpression(Token token) {
-		if (isAttExpression()) {
-			getSymbolTable().addToExpression(token.getContent());
+		if (isAssExpression()) {
+			getSymbolTable().addToExpression(token);
 		}
 	}
 	
@@ -223,9 +224,43 @@ public class Parser {
 	 * @return
 	 */
 	public boolean isOperator(Token token) {
-		return getLex().getMathOperators().contains(token.getContent()) || 
-			   getLex().getLogOperators().contains(token.getContent())  ||
-			   getLex().getAssOperators().contains(token.getContent());
+		return isMathOperator(token) || isLogOperator(token) || isAssOperator(token);
+	}
+	
+	/**
+	 * Retorna se o token é um operador matemático
+	 * @param token
+	 * @return
+	 */
+	public boolean isMathOperator(Token token) {
+		return getLex().getMathOperators().contains(token.getContent());
+	}
+	
+	/**
+	 * Retorn a se o token é um operador lógico
+	 * @param token
+	 * @return
+	 */
+	public boolean isLogOperator(Token token) {
+		return getLex().getLogOperators().contains(token.getContent());
+	}
+	
+	/**
+	 * Retorna se o token é um operador de atribuição
+	 * @param token
+	 * @return
+	 */
+	public boolean isAssOperator(Token token) {
+		return getLex().getAssOperators().contains(token.getContent());
+	}
+	
+	/**
+	 * Retorna se o token é um operador unário
+	 * @param token
+	 * @return
+	 */
+	public boolean isUnOperator(Token token) {
+		return getLex().getUnOperators().contains(token.getContent());
 	}
 	
 	/**
@@ -333,16 +368,16 @@ public class Parser {
 	 * Retorna se o Parser está identificando uma expressão de atribuição
 	 * @return
 	 */
-	public boolean isAttExpression() {
-		return attExpression;
+	public boolean isAssExpression() {
+		return assExpression;
 	}
 
 	/**
 	 * Define se o Parser está ou não identificando uma expressão de atribuição
 	 * @return
 	 */
-	public void setAttExpression(boolean attExpression) {
-		this.attExpression = attExpression;
+	public void setAssExpression(boolean assExpression) {
+		this.assExpression = assExpression;
 	}
 
 

@@ -1,17 +1,10 @@
 program
 	begin
-		var inteiro = 1;
-		inteiro++;
-		for var x = 0; x < 10; x++
-		begin
-			var escopo1 = 0;
-			escopo1++;
-			var nome = "Carlos";
-			if escopo2 == 2
-			begin
-				var escopo3 = 3.14;
-			end
-			var euler = 0.5772156649;
-		end
+		var real = inteiro + 3 + real;
+	
+		var inteiro = 0;
+		inteiro = 1 + 1;
+		
+		
 	end
 	
