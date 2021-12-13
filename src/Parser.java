@@ -104,7 +104,6 @@ public class Parser {
 			return null;
 		}
 		Token token = getLex().nextToken();
-		String debug = token.getContent();
 		verifyExpression(token);
 		buildExpression(token);
 		verifyScope(token);
@@ -133,10 +132,11 @@ public class Parser {
 	 * @throws ScriptException 
 	 */
 	public void verifyExpression(Token token) throws ScriptException {
+		String debug = token.getContent();
 		if (isFoundVar() && isAssOperator(token)) {
 			setAssExpression(true);
 		}
-	    if (isPunctuation(token) && token.getContent().equals(";")) {
+	    if (isPunctuation(token) && token.getContent().equals(";") && isAssExpression()) {
 	    	setFoundVar(false);
 			setAssExpression(false);
 			getSymbolTable().finishExpression();

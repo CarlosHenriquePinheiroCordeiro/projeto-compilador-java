@@ -1,8 +1,9 @@
 program
 	begin
-		var nome = "Carlos";
-		var idNome = nome;
-		var real = 1.1;
-		var inteiro = 1;
+		var limite = 10;
+		for var x = 0; x < limite; x++
+		begin
+			var nome = "Carlos";
+		end
 	end
 	
