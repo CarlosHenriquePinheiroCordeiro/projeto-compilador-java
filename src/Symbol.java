@@ -47,8 +47,6 @@ public class Symbol<T> {
 	public Symbol(String name, int line) {
 		setName(name);
 		setDeclarationLine(line);
-		//setValue(name);
-		//setBits();
 	}
 	
 	public void addLine(int line) {
@@ -72,12 +70,23 @@ public class Symbol<T> {
 	}
 	
 	public int getBits() {
+		setBitsFromValue();
 		return bits;
 	}
 	
-	public void setBits() {
-		int bits = 0;
-		this.bits = bits;
+	/**
+	 * Define, através do valor do símbolo, a quantidade de bits que ocupa na memória
+	 */
+	public void setBitsFromValue() {
+		String value = (String)getValue();
+		if (getType() == TokenType.STRING)
+			this.bits = value.getBytes().length * 8;
+		if (getType() == TokenType.INTEGER) {
+			this.bits = Integer.bitCount(Integer.parseInt(value));
+		}
+		if (getType() == TokenType.REAL) {
+			this.bits = Float.floatToIntBits(Float.parseFloat(value));
+		}
 	}
 	
 	public List<Integer> getLines() {

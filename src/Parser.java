@@ -132,7 +132,6 @@ public class Parser {
 	 * @throws ScriptException 
 	 */
 	public void verifyExpression(Token token) throws ScriptException {
-		String debug = token.getContent();
 		if (isFoundVar() && isAssOperator(token)) {
 			setAssExpression(true);
 		}
