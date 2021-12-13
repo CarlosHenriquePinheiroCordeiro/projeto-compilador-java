@@ -23,6 +23,11 @@ public class SymbolTable {
 	private Symbol actualSymbol = null;
 	
 	/**
+	 * Indica se está ocorrendo concatenação
+	 */
+	private boolean isConcat = false;
+	
+	/**
 	 * Total de escopos do programa
 	 */
 	private int scopes = 0;
@@ -124,9 +129,10 @@ public class SymbolTable {
 			Lexical lex = new Lexical();
 			lex.setCode(getValueFromVar(expressionItem).toCharArray());
 			expressionItem = lex.nextToken();
+		}	
+		if (expressionItem.getType() == TokenType.STRING || expressionItem.getType() == TokenType.VAR) {
+			setConcat(true);
 		}
-		if (expressionItem.getType() == TokenType.STRING || expressionItem.getType() == TokenType.VAR)
-			expressionItem.setContent("\""+expressionItem.getContent()+"\"");
 		getExpression().add(expressionItem);
 	}
 	
@@ -136,8 +142,9 @@ public class SymbolTable {
 	 */
 	public void finishExpression() throws ScriptException {
 		String value = (String)buildValueFromExpression();
-		//getSymbol(getActualSymbol().getName()).setType(verifyType());
+		getSymbol(getActualSymbol().getName()).setType(verifyType(value));
 		getSymbol(getActualSymbol().getName()).setValue(value);
+		setConcat(false);
 		getExpression().clear();
 	}
 	
@@ -146,23 +153,12 @@ public class SymbolTable {
 	 * @param value
 	 * @return
 	 */
-	public byte verifyType() {
-		boolean isReal = false;
-		Lexical lex = new Lexical();
-		for (Token token : getExpression()) {
-			String value = "";
-			if (token.getType() == TokenType.VAR) {
-				value = getValueFromVar(token);
-			}
-			else {
-				value = token.getContent();
-			}
-			lex.setCode(value.toCharArray());
-			Token tToken = lex.nextToken();
-			
-			
-		}
-		return 1;
+	public byte verifyType(String value) {
+		if (isConcat())
+			return TokenType.STRING;
+		Lexical lex = new Lexical(value.toCharArray());
+		Token tToken = lex.nextToken();
+		return tToken.getType();
 	}
 	
 	/**
@@ -186,12 +182,14 @@ public class SymbolTable {
 	public <T> T buildValueFromExpression() throws ScriptException {
 		String expression = "";
 		for (Token token : getExpression()) {
+			if (token.getType() == TokenType.MAT_OPERATOR && !token.getContent().equals("+") && isConcat())
+				throw new RuntimeException("Error: invalid operator found for concatenation ("+token.getContent()+")");
 			expression += token.getContent();
 		}
 		ScriptEngineManager scriptEM = new ScriptEngineManager();
 	    ScriptEngine engine = scriptEM.getEngineByName("JavaScript");
 	    
-		return (T)engine.eval(expression);
+		return (T)engine.eval("\""+expression+"\"");
 	}
 	
 	/**
@@ -252,6 +250,22 @@ public class SymbolTable {
 	 */
 	public void setActualSymbol(Symbol actualSymbol) {
 		this.actualSymbol = actualSymbol;
+	}
+
+	/**
+	 * Retorna se está ocorrendo concatenação
+	 * @return
+	 */
+	public boolean isConcat() {
+		return isConcat;
+	}
+
+	/**
+	 * Define se está ocorrendo concatenação
+	 * @param isConcat
+	 */
+	public void setConcat(boolean isConcat) {
+		this.isConcat = isConcat;
 	}
 
 	/**

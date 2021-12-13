@@ -1,6 +1,8 @@
 program
 	begin
 		var nome = "Carlos";
-		var indefinida = 1 + nome;
+		var idNome = nome;
+		var real = 1.1;
+		var inteiro = 1;
 	end
 	

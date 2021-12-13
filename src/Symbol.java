@@ -110,7 +110,7 @@ public class Symbol<T> {
 
 	@Override
 	public String toString() {
-		return "Symbol [name=" + getName()    + ", type=" + TokenType.type[getType()] 
+		return "\nSymbol [name=" + getName()    + ", type=" + TokenType.type[getType()] 
 				+ ", value="   +getValue()    + ", bits=" + getBits() + ", declarationLine="+getDeclarationLine()
 				+", inLines="  + printLines() + ", used=" + isUsed();
 	}
