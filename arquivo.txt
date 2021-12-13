@@ -5,6 +5,6 @@ program
 		begin
 			var nome = "Carlos";
 		end
-		var bitsReal = 1.0;
+		var bitsReal = 1.11;
 	end
 	
