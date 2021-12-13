@@ -45,8 +45,18 @@ public class SymbolTable {
 		else {
 			getSymbol(token.getContent()).addLine(line);
 			getSymbol(token.getContent()).setUsed(true);
-			setActualSymbol(getSymbol(token.getContent()));
+			if (!isAssExpression()) {
+				setActualSymbol(getSymbol(token.getContent()));
+			}
 		}
+	}
+	
+	/**
+	 * Retorna se está ocorrendo uma expressão de atribuição
+	 * @return
+	 */
+	public boolean isAssExpression() {
+		return getExpression().size() > 0;
 	}
 
 	/**
@@ -110,6 +120,13 @@ public class SymbolTable {
 	 * @param expressionItem
 	 */
 	public void addToExpression(Token expressionItem) {
+		if (expressionItem.getType() == TokenType.VAR) {
+			Lexical lex = new Lexical();
+			lex.setCode(getValueFromVar(expressionItem).toCharArray());
+			expressionItem = lex.nextToken();
+		}
+		if (expressionItem.getType() == TokenType.STRING || expressionItem.getType() == TokenType.VAR)
+			expressionItem.setContent("\""+expressionItem.getContent()+"\"");
 		getExpression().add(expressionItem);
 	}
 	
@@ -119,8 +136,8 @@ public class SymbolTable {
 	 */
 	public void finishExpression() throws ScriptException {
 		String value = (String)buildValueFromExpression();
+		//getSymbol(getActualSymbol().getName()).setType(verifyType());
 		getSymbol(getActualSymbol().getName()).setValue(value);
-		getSymbol(getActualSymbol().getName()).setType (verifyType());
 		getExpression().clear();
 	}
 	
@@ -131,6 +148,7 @@ public class SymbolTable {
 	 */
 	public byte verifyType() {
 		boolean isReal = false;
+		Lexical lex = new Lexical();
 		for (Token token : getExpression()) {
 			String value = "";
 			if (token.getType() == TokenType.VAR) {
@@ -139,6 +157,9 @@ public class SymbolTable {
 			else {
 				value = token.getContent();
 			}
+			lex.setCode(value.toCharArray());
+			Token tToken = lex.nextToken();
+			
 			
 		}
 		return 1;
@@ -167,8 +188,8 @@ public class SymbolTable {
 		for (Token token : getExpression()) {
 			expression += token.getContent();
 		}
-		ScriptEngineManager mgr = new ScriptEngineManager();
-	    ScriptEngine engine     = mgr.getEngineByName("JavaScript");
+		ScriptEngineManager scriptEM = new ScriptEngineManager();
+	    ScriptEngine engine = scriptEM.getEngineByName("JavaScript");
 	    
 		return (T)engine.eval(expression);
 	}

@@ -1,5 +1,6 @@
 program
 	begin
-		var indefinida;
+		var nome = "Carlos";
+		var indefinida = 1 + nome;
 	end
 	

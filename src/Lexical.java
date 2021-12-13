@@ -61,16 +61,32 @@ public class Lexical {
 	private byte tokenType = TokenType.UNDEFINED;
 	
 	/**
+	 * Indica se o analisador está realizando um "escape" para Strings. Exemplo: "Meu nome é \"Carlos\""
+	 */
+	private boolean scapeString = false;
+	
+	/**
 	 * Indica se o programa chegou ao fim, ou seja, não há mais caracteres para ler
 	 */
 	private boolean finish  = false;
 	
 	/**
-	 * Construtor que instancia as palavras chave e operadores para a análise léxica
+	 * Construtor que instancia as palavras chave e operadores para a análise léxica e o código a ser analisado
 	 * @param code
 	 */
 	public Lexical(char[] code) {
 		setCode(code);
+		setDefaultResources();
+	}
+	
+	/**
+	 * Construtor que instancia as palavras chave e operadores para a análise léxica
+	 */
+	public Lexical() {
+		setDefaultResources();
+	}
+	
+	public void setDefaultResources() {
 		setKeyWords();
 		setMathOperators();
 		setAssOperators();
@@ -125,12 +141,19 @@ public class Lexical {
 					break;
 					
 				case State.LITERAL:
-					if (isQuote()) {
-						state = State.TOKEN_END;
-						plusQuotes();
-					} else {
-						content += code[position];
+					if (isScapeChar()) {
+						setScapeString(true);
 						nextChar();
+					}
+					else {
+						if (isQuote() && !isScapeString()) {
+							state = State.TOKEN_END;
+							plusQuotes();
+						} else {
+							setScapeString(false);
+							content += code[position];
+							nextChar();
+						}
 					}
 					break;
 					
@@ -455,6 +478,14 @@ public class Lexical {
 	}
 	
 	/**
+	 * Verifica se o caractere em questão é um caractere de escape para String
+	 * @return
+	 */
+	public boolean isScapeChar() {
+		return code[position] == '\\';
+	}
+	
+	/**
 	 * Verifica se a análise chegou ao fim do programa, ou seja, não restam  mais caracteres para serem analisados
 	 * @return
 	 */
@@ -476,6 +507,22 @@ public class Lexical {
 	 */
 	public boolean isFinish() {
 		return this.finish;
+	}
+
+	/**
+	 * Retorna se o analisador encontrou um caracter de escape
+	 * @return
+	 */
+	public boolean isScapeString() {
+		return scapeString;
+	}
+
+	/**
+	 * Define se o analisador encontrou um caracter de escape
+	 * @param scapeString
+	 */
+	public void setScapeString(boolean scapeString) {
+		this.scapeString = scapeString;
 	}
 
 	/**
