@@ -15,7 +15,7 @@ import javax.script.*;
 public class Main {
 
 	public static void main(String[] args) throws ScriptException {		
-		/*System.out.println("Digite:");
+		System.out.println("Digite:");
 		System.out.println("1 - Análise Léxica e exibição dos Tokens.");
 		System.out.println("2 - Análise Sintática + Exibição dos Símbolos.");
 		Scanner digite = new Scanner(System.in);
@@ -27,10 +27,10 @@ public class Main {
 				System.out.println(tk);
 			}
 		}
-		else {*/
+		else {
 			Parser parser = new Parser(new Lexical(Read.readFile("arquivo.txt")));
-			//System.out.println("Análise sintática realizada com sucesso!");
-		//}
+			System.out.println("Análise sintática realizada com sucesso!");
+		}
 	}
 
 }

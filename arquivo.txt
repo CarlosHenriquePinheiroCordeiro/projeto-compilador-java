@@ -1,17 +1,10 @@
 program
 	begin
-		var int = 1;
+		var real_errado = 1.290.314;
+		var erro = "O token acima irá disparar um erro;
 		if int > 1
 		begin
-			var nome = "Carlos";
-			var sobrenome = "Henrique";
-			var nomeCompleto = nome " " sobrenome;
-			if int > 2
-			begin
-				var real = 1.1;
-				var recebeu = real;
-				var erro = naoExiste;
-			end
+			var Numero_PI = 3.14;
 		end
 	end
 	
