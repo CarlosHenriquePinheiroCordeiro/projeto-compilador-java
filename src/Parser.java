@@ -112,21 +112,6 @@ public class Parser {
 	}
 	
 	/**
-	 * Verifica o escopo atual do programa, informando-o para a tabela de símbolos
-	 * @param token
-	 */
-	public void verifyScope(Token token) {
-		if (isKeyword(token)) {
-			if (isStartScope(token)) {
-				getSymbolTable().plusActualScope();
-			}
-			else if (isEndScope(token)) {
-				getSymbolTable().subtractActualScope();
-			}
-		}
-	}
-	
-	/**
 	 * Verifica se o parser encontrou o início de uma expressão de atribuição
 	 * @param token
 	 * @throws ScriptException 
@@ -142,16 +127,6 @@ public class Parser {
 		}
 	}
 	
-	/**
-	 * Verifica se a variável se encaixa como um símbolo, se for o caso, a tabela de símbolos o adotará com as devidas tratativas
-	 * @param token
-	 */
-	public void verifySymbol(Token token) {
-		if (token.getType() == TokenType.VAR) {
-			getSymbolTable().newSymbol(token, getLine());
-			setFoundVar(true);
-		}
-	}
 	
 	/**
 	 * Se for o caso, adiciona os tokens à expressão de atribuição
@@ -160,6 +135,32 @@ public class Parser {
 	public void buildExpression(Token token) {
 		if (isAssExpression() && !isAssOperator(token)) {
 			getSymbolTable().addToExpression(token);
+		}
+	}
+	
+	/**
+	 * Verifica o escopo atual do programa, informando-o para a tabela de símbolos
+	 * @param token
+	 */
+	public void verifyScope(Token token) {
+		if (isKeyword(token)) {
+			if (isStartScope(token)) {
+				getSymbolTable().plusActualScope();
+			}
+			else if (isEndScope(token)) {
+				getSymbolTable().subtractActualScope();
+			}
+		}
+	}
+	
+	/**
+	 * Verifica se a variável se encaixa como um símbolo, se for o caso, a tabela de símbolos o adotará com as devidas tratativas
+	 * @param token
+	 */
+	public void verifySymbol(Token token) {
+		if (token.getType() == TokenType.VAR) {
+			getSymbolTable().newSymbol(token, getLine());
+			setFoundVar(true);
 		}
 	}
 	

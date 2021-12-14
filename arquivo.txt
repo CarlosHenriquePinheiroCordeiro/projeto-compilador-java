@@ -1,10 +1,17 @@
 program
 	begin
-		var limite = 10;
-		for var x = 0; x < limite; x++
+		var int = 1;
+		if int > 1
 		begin
 			var nome = "Carlos";
+			var sobrenome = "Henrique";
+			var nomeCompleto = nome " " sobrenome;
+			if int > 2
+			begin
+				var real = 1.1;
+				var recebeu = real;
+			end
 		end
-		var bitsReal = 1.11;
+		
 	end
 	
