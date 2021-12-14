@@ -10,8 +10,8 @@ program
 			begin
 				var real = 1.1;
 				var recebeu = real;
+				var erro = naoExiste;
 			end
 		end
-		
 	end
 	

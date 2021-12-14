@@ -191,34 +191,6 @@ public class SymbolTable {
 	    
 		return (T)engine.eval("\""+expression+"\"");
 	}
-	
-	/**
-	 * Constrói a expressão de atribuição de valor, para expressões numéricas
-	 * @param <T>
-	 * @return
-	 */
-	public <T> T buildValue() {
-		String expression= "";
-		boolean isReal = false;
-		for (Token token : getExpression()) {
-			if (token.getType() == TokenType.REAL)
-				isReal = true;
-			
-		}
-		return null;
-	}
-	
-	/**
-	 * Retorna se a expressão atual contém concatenação ou não
-	 * @return
-	 */
-	public boolean isConcatenation() { 
-		for (Token token : getExpression()) {
-			if (token.getType() == TokenType.STRING) 
-				return true;
-		}	
-		return false;
-	}
 
 	/**
 	 * Retorna a tabela de símbolos
